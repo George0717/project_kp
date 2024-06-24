@@ -1,0 +1,51 @@
+.table-wrapper {
+    width: 100%;
+    max-height: 400px; /* Sesuaikan dengan tinggi yang diinginkan */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+    display: block; /* Tambahkan ini untuk memastikan tabel dapat di-scroll */
+  }
+  
+  .table thead,
+  .table tbody {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+  .table thead {
+    width: calc( 100% - 1em );
+  }
+  
+  .table tbody {
+    height: 300px; /* Sesuaikan dengan tinggi yang diinginkan */
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
+  }
+  
+  .table tbody tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+  }
+  
+  .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
