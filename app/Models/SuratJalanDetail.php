@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SuratJalan extends Model
+class SuratJalanDetail extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'nomorSurat',
-        'tglKirim',
-        'tujuanTempat',
+        'surat_jalan_id',
+        'namaBarang',
+        'jumlahBarang',
     ];
 
-    public function details()
+    public function suratJalan()
     {
-        return $this->hasMany(SuratJalanDetail::class);
+        return $this->belongsTo(SuratJalan::class);
     }
 }

@@ -2,123 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\suratJalan;
-use Exception;
+use App\Models\SuratJalan;
+use App\Models\SuratJalanDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class SuratJalanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $table_suratJalan = suratJalan::all();
-        return view('suratJalan.index')->with('surat_jalans', $table_suratJalan);
+        $suratJalans = SuratJalan::with('details')->get();
+        return view('suratJalan.index', compact('suratJalans'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $suratJalan = suratJalan::all();
-        return view('suratJalan.create')->with('surat_jalans', $suratJalan);
+        return view('suratJalan.create');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
 
     public function store(Request $request)
     {
-       
-        $validateData = $request->validate([
-            'nomorSurat' => 'required|unique:surat_jalans|min:6|max:6',
+        $request->validate([
+            'nomorSurat' => 'required|unique:surat_jalans|max:6',
             'tglKirim' => 'required|date',
-            'tujuanTempat' => 'required'
+            'tujuanTempat' => 'required',
+            'namaBarang.*' => 'required',
+            'jumlahBarang.*' => 'required|integer',
         ]);
 
-        $suratJalan = new suratJalan();
-        $suratJalan->nomorSurat = $validateData['nomorSurat'];
-        $suratJalan->tglKirim = $validateData['tglKirim'];
-        $suratJalan->tujuanTempat = $validateData['tujuanTempat'];
-        $suratJalan->save();
-      
+        $suratJalan = SuratJalan::create($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat']));
+
+        foreach ($request->namaBarang as $index => $namaBarang) {
+            SuratJalanDetail::create([
+                'surat_jalan_id' => $suratJalan->id,
+                'namaBarang' => $namaBarang,
+                'jumlahBarang' => $request->jumlahBarang[$index],
+            ]);
+        }
 
         return redirect()->route('suratJalan.index')->with('success', "Data berhasil disimpan");
     }
-    public function storeDetail(Request $request)
+
+    public function show(SuratJalan $suratJalan)
     {
-        $validateData = $request->validate([
-            'namaBarang' => 'required',
-            'jumlahBarang' => 'required',
-        ]);
-        $suratJalan = new suratJalan();
-        $suratJalan->namaBarang = $validateData['namaBarang'];
-        $suratJalan->jumlahBarang = $validateData['jumlahBarang'];
-        $suratJalan->save();
-        return redirect()->back()->with('success', "Data berhasil disimpan");
+        return view('suratJalan.show', compact('suratJalan'));
     }
 
-    
-
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(suratJalan $suratJalan)
+    public function edit(SuratJalan $suratJalan)
     {
-        return view('suratJalan.modal')->with('suratJalan', $suratJalan);
+        return view('suratJalan.edit', compact('suratJalan'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(suratJalan $suratJalan)
+    public function update(Request $request, SuratJalan $suratJalan)
     {
-        return view('suratJalan.update')->with('suratJalan', $suratJalan);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, suratJalan $suratJalan)
-    {
-        $validateData = $request->validate([
-            'nomorSurat' => 'required',
-            'tglKirim' => 'required',
-            'namaBarang' => 'required',
-            'jumlahBarang' => 'required',
-            'tujuanTempat' => 'required'
+        $request->validate([
+            'nomorSurat' => 'required|max:6',
+            'tglKirim' => 'required|date',
+            'tujuanTempat' => 'required',
+            'namaBarang.*' => 'required',
+            'jumlahBarang.*' => 'required|integer',
         ]);
 
-        $suratJalan->id = Str::uuid();
-        $suratJalan->nomorSurat = $validateData['nomorSurat'];
-        $suratJalan->tglKirim = $validateData['tglKirim'];
-        $suratJalan->namaBarang = $validateData['namaBarang'];
-        $suratJalan->jumlahBarang = $validateData['jumlahBarang'];
-        $suratJalan->tujuanTempat = $validateData['tujuanTempat'];
-        $suratJalan->save();
+        $suratJalan->update($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat']));
 
-        return redirect()->route('suratJalan.index')->with('success', "Data " . $validateData['nomorSurat'] . " berhasil disimpan");
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        try {
-            $item = suratJalan::findOrFail($id);
-            $item->delete();
-            
-            return response()->json(['message' => 'Item deleted successfully!']);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+        $suratJalan->details()->delete();
+        foreach ($request->namaBarang as $index => $namaBarang) {
+            SuratJalanDetail::create([
+                'surat_jalan_id' => $suratJalan->id,
+                'namaBarang' => $namaBarang,
+                'jumlahBarang' => $request->jumlahBarang[$index],
+            ]);
         }
+
+        return redirect()->route('suratJalan.index')->with('success', "Data berhasil diperbarui");
     }
-    
+
+    public function destroy(SuratJalan $suratJalan)
+    {
+        $suratJalan->delete();
+        return redirect()->route('suratJalan.index')->with('success', "Data berhasil dihapus");
+    }
 }
