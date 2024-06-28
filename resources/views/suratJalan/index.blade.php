@@ -11,7 +11,6 @@
                 <th>Nomor Surat</th>
                 <th>Tanggal Kirim</th>
                 <th>Tujuan Tempat</th>
-                <th>Detail Barang</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -21,13 +20,6 @@
                     <td>{{ $suratJalan->nomorSurat }}</td>
                     <td>{{ $suratJalan->tglKirim }}</td>
                     <td>{{ $suratJalan->tujuanTempat }}</td>
-                    <td>
-                        <ul>
-                            @foreach ($suratJalan->details as $detail)
-                                <li>{{ $detail->namaBarang }} - {{ $detail->jumlahBarang }}</li>
-                            @endforeach
-                        </ul>
-                    </td>
                     <td>
                         <a href="{{ route('suratJalan.show', $suratJalan) }}" class="btn btn-info">Lihat</a>
                         <a href="{{ route('suratJalan.edit', $suratJalan) }}" class="btn btn-warning">Edit</a>

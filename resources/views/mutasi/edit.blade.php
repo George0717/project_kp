@@ -1,17 +1,18 @@
 @extends('layouts.main')
 
-@section('title', 'Tambah Mutasi')
-@section('page1', 'Tambah Mutasi')
+@section('title', 'Edit Mutasi')
+@section('page1', 'Edit Mutasi')
 
 @section('container')
 <div class="container mt-5">
     <div class="card">
         <div class="card-header bg-success text-white">
-            <h4 class="mb-0 text-white">Tambah Mutasi</h4>
+            <h4 class="mb-0 text-white">Edit Mutasi</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('mutasi.store') }}" method="post" enctype="multipart/form-data"> 
+            <form action="{{ route('mutasi.update', $mutasi ) }}" method="post" enctype="multipart/form-data">
                 @csrf
+                @method('put')
                 <div class="form-group mb-4 border">
                     <label for="divisi_pengirim" class="form-label">Divisi Pengirim</label>
                     <input type="text" class="form-control @error('divisi_pengirim') is-invalid @enderror" id="divisi_pengirim" name="divisi_pengirim">

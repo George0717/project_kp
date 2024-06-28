@@ -13,7 +13,28 @@ return new class extends Migration
     {
         Schema::create('mutasis', function (Blueprint $table) {
             $table->id();
+            // Pengirim
+            $table->string('divisi_pengirim');
+            $table->string('penanggung_jawab');
+            $table->string('dibuat_oleh');
+            // Tujuan
+            $table->string('lokasi');
+            $table->string('divisi_tujuan');           
             $table->timestamps();
+        });
+
+        Schema::create('mutasi_details', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('mutasi_id'); // Relasi ke mutasis
+            $table->string('nama_barang');
+            $table->string('merk');
+            $table->string('model');
+            $table->string('kategori');
+            $table->string('no_inventaris');
+            $table->string('keterangan');
+            $table->timestamps();
+            // Foreign key constraint
+            $table->foreign('mutasi_id')->references('id')->on('mutasis')->onDelete('cascade');
         });
     }
 
