@@ -1,9 +1,13 @@
 @extends('layouts.main')
 
 @section('container')
-<h1 class="text-center mt-2">Jaya Masamawan</h1>
+<h1 class="text-center mt-2">Jaya Masamawan Putra Sejahtera</h1>
 <h2>About</h2>
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut ipsam corporis cupiditate iste minima quod est ut distinctio. Iure tempora mollitia, quaerat hic nesciunt architecto maiores veniam sint? Velit, aperiam?</p>
+<p>PT. Jaya Masawan Putra Sejahtera merupakan salah satu perusahaan Retail
+    yang berkembang di provinsi Sumatera Selatan. Perusahaan retail ini didirikan oleh
+    Bapak Yusuf Masawan beserta istri, Ibu Junlia Susanti yang diawali dengan usaha
+    di bidang konveksi. Berkat kerja keras dan kegigihan mereka toko konveksiberubah
+    menjadi perusahaan retail yang berkembang</p>
 
 <h2 class="text-center mt-4">Sejarah Perusahaan</h2>
 <div class="history-slider">

@@ -16,7 +16,6 @@
                 background: white;
             }
         </style>
-
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -28,9 +27,10 @@
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg" >
                 {{ $slot }}
             </div>
         </div>
     </body>
 </html>
+{{-- style=" background: rgb(21, 136, 67);" --}}

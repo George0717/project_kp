@@ -1,13 +1,9 @@
-<!-- resources/views/surat-jalan/index.blade.php -->
-
 @extends('layouts.main')
-
 @section('title', 'Daftar Surat Jalan')
 @section('page1', 'Daftar Surat Jalan')
-
 @section('container')
 <a href="{{ route('suratJalan.create') }}" class="btn btn-primary mb-3">Tambah Surat Jalan</a>
-<table class="table table-striped">
+<table class="table table-striped text-center">
     <thead>
         <tr>
             <th>Nomor Surat</th>
