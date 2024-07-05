@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MutasiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuratJalanController;
@@ -15,10 +17,10 @@ Route::get('/register', function () {
     return view('auth.register');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
+Route::get('/sejarah/{id}', [HistoryController::class, 'show'])->name('sejarah');
 
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -50,4 +52,3 @@ Route::delete('/surat/{suratJalan}', [SuratJalanController::class, 'destroy'])->
 
 
 require __DIR__ . '/auth.php';
-

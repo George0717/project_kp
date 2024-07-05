@@ -6,8 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>@yield('title','Login' )</title>
-        <link rel="icon" href="
-        {{ asset('resources\assets\assets\img\login.png') }}">
+        <link rel="icon" href="{{ url('assets/assets/img/JM.png') }}" type="image/png"/>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

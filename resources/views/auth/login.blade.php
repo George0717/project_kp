@@ -1,4 +1,3 @@
-
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
@@ -23,8 +22,7 @@
 
         <!-- Remember Me -->
         <div class="flex items-center justify-end mt-4">
-
-            <x-primary-button class="ms-3">
+            <x-primary-button class="ms-3 m-2">
                 <a href="{{ route('register') }}">Register</a>
             </x-primary-button>
             <x-primary-button class="ms-3">
