@@ -19,7 +19,7 @@
             <td>{{ $suratJalan->tglKirim }}</td>
             <td>{{ $suratJalan->tujuanTempat }}</td>
             <td>
-                <a href="{{ route('suratJalan.show', $suratJalan) }}" class="btn btn-info">Lihat</a>
+                <a href="{{ route('suratJalan.show', $suratJalan) }}" class="btn btn-info">Detail</a>
                 <button class="btn btn-warning edit-button" data-id="{{ $suratJalan->id }}">Edit</button>
                 <button class="btn btn-danger delete-button" data-id="{{ $suratJalan->id }}">Hapus</button>
                 <form action="{{ route('suratJalan.destroy', $suratJalan) }}" method="post" class="delete-form"

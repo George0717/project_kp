@@ -23,7 +23,7 @@
             <td>{{ $mutasi->dibuat_oleh }}</td>
             <td>{{ $mutasi->lokasi }}</td>
             <td>
-                <a href="{{ route('mutasi.show', $mutasi) }}" class="btn btn-info btn-sm">Lihat</a>
+                <a href="{{ route('mutasi.show', $mutasi) }}" class="btn btn-info btn-sm">Detail</a>
                 <button class="btn btn-warning btn-sm edit-button" data-id="{{ $mutasi->id }}">Edit</button>
                 <button class="btn btn-danger btn-sm delete-button" data-id="{{ $mutasi->id }}">Hapus</button>
                 <form action="{{ route('mutasi.destroy', $mutasi) }}" method="post" style="display:inline-block;">

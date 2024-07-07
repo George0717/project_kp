@@ -30,7 +30,7 @@
             aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
             target="_blank">
-            <span class="ms-1 font-weight-bold text-white" style="font-size: 30px">Arsip App</span>
+            <span class="ms-1 font-weight-bold text-white" style="font-size: 24px">Manajemen Arsip</span>
         </a>
     </div>
 
