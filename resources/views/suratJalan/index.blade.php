@@ -3,6 +3,28 @@
 @section('page1', 'Daftar Surat Jalan')
 @section('container')
 <a href="{{ route('suratJalan.create') }}" class="btn btn-primary mb-3">Tambah Surat Jalan</a>
+
+<!-- Filter Form -->
+<form action="{{ route('suratJalan.index') }}" method="GET" class="mb-3">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="date" name="tglKirim" class="form-control" placeholder="Tanggal Kirim" value="{{ request('tglKirim') }}">
+        </div>
+        <div class="col-md-4">
+            <input type="text" id="tujuanTempat" class="form-control" placeholder="Cari Tujuan Tempat">
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{{ route('suratJalan.index') }}" class="btn btn-secondary ml-2">Reset</a>
+        </div>
+    </div>
+</form>
+
+@if ($suratJalans->isEmpty())
+<div class="alert alert-warning" role="alert">
+    Data tidak ditemukan.
+</div>
+@else
 <table class="table table-striped text-center">
     <thead>
         <tr>
@@ -12,11 +34,11 @@
             <th>Aksi</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="myTable">
         @foreach ($suratJalans as $suratJalan)
         <tr>
             <td>{{ $suratJalan->nomorSurat }}</td>
-            <td>{{ $suratJalan->tglKirim }}</td>
+            <td>{{ \Carbon\Carbon::parse($suratJalan->tglKirim)->translatedFormat('d F Y') }}</td>
             <td>{{ $suratJalan->tujuanTempat }}</td>
             <td>
                 <a href="{{ route('suratJalan.show', $suratJalan) }}" class="btn btn-info">Detail</a>
@@ -33,6 +55,7 @@
         @endforeach
     </tbody>
 </table>
+@endif
 @endsection
 
 @push('scripts')
@@ -83,4 +106,17 @@
         });
     });
 </script>
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $("#tujuanTempat").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+</script>
+@endpush
+
 @endpush

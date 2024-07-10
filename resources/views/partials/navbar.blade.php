@@ -66,9 +66,6 @@
                     <span class="nav-link-text ms-1">Mutasi</span>
                 </a>
             </li>
-
-
-
 </aside>
 
 <main class="main-content border-radius-lg">

@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('nomorSurat')->unique();
             $table->date('tglKirim');
             $table->string('tujuanTempat');
+            $table->string('foto');
             $table->timestamps();
         });
 

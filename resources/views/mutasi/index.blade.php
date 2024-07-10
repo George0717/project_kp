@@ -5,6 +5,7 @@
 
 @section('container')
 <a href="{{ route('mutasi.create') }}" class="btn btn-primary mb-3">Tambah Mutasi</a>
+<a href="{{ route('mutasi.create') }}" class="btn btn-primary mb-3">Andre Kurniawan</a>
 <table class="table table-striped table-bordered text-center">
     <thead>
         <tr>

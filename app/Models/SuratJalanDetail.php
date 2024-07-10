@@ -19,4 +19,5 @@ class SuratJalanDetail extends Model
     {
         return $this->belongsTo(SuratJalan::class);
     }
+    public $timestamps = true;
 }

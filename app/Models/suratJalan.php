@@ -13,7 +13,10 @@ class SuratJalan extends Model
         'nomorSurat',
         'tglKirim',
         'tujuanTempat',
+        'foto'
     ];
+
+    public $timestamps = true;
 
     public function details()
     {
