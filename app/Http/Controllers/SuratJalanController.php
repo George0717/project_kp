@@ -27,8 +27,6 @@ class SuratJalanController extends Controller
         return view('suratJalan.index', compact('suratJalans'));
     }
 
-
-
     public function create()
     {
         return view('suratJalan.create');
@@ -36,33 +34,35 @@ class SuratJalanController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'nomorSurat' => 'required|unique:surat_jalans|max:6|min:6',
             'tglKirim' => 'required|date',
             'tujuanTempat' => 'required',
             'namaBarang.*' => 'required',
             'jumlahBarang.*' => 'required|integer',
+            'kode_barang.*' => 'nullable|string',
+            'keterangan_barang.*' => 'nullable|string',
             'foto' => 'required|file|image',
         ]);
 
         $suratJalan = SuratJalan::create($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat', 'foto']));
 
-        
-    if ($request->hasFile('foto')) {
-        // Simpan foto ke dalam direktori public/images
-        $fotoPath = $request->file('foto')->store('public/images');
-        
-        // Ambil nama file dari $fotoPath dan simpan ke dalam field 'foto'
-        $suratJalan->foto = basename($fotoPath);
-        $suratJalan->save();
-    }
+        if ($request->hasFile('foto')) {
+            // Simpan foto ke dalam direktori public/images
+            $fotoPath = $request->file('foto')->store('public/images');
+
+            // Ambil nama file dari $fotoPath dan simpan ke dalam field 'foto'
+            $suratJalan->foto = basename($fotoPath);
+            $suratJalan->save();
+        }
 
         foreach ($request->namaBarang as $index => $namaBarang) {
             SuratJalanDetail::create([
                 'surat_jalan_id' => $suratJalan->id,
                 'namaBarang' => $namaBarang,
                 'jumlahBarang' => $request->jumlahBarang[$index],
+                'kode_barang' => $request->kode_barang[$index] ?? null,
+                'keterangan_barang' => $request->keterangan_barang[$index] ?? null,
             ]);
         }
 
@@ -87,25 +87,22 @@ class SuratJalanController extends Controller
             'tujuanTempat' => 'required',
             'namaBarang.*' => 'required',
             'jumlahBarang.*' => 'required|integer',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'kode_barang.*' => 'nullable|string',
+            'keterangan_barang.*' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         // Update surat jalan
         $suratJalan->update($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat']));
 
         if ($request->hasFile('foto')) {
-            if ($suratJalan->foto) {
-                Storage::disk('public')->delete($suratJalan->foto);
-            }
-            $data['foto'] = $request->file('foto')->store('surat_jalan_fotos', 'public');
+            // Simpan foto ke dalam direktori public/images
+            $fotoPath = $request->file('foto')->store('public/images');
+
+            // Ambil nama file dari $fotoPath dan simpan ke dalam field 'foto'
+            $suratJalan->foto = basename($fotoPath);
+            $suratJalan->save();
         }
-        $suratJalan->update($data);
-        // Logging to check if update is successful
-        Log::info('Updated surat jalan', [
-            'id' => $suratJalan->id,
-            'updated_at' => $suratJalan->updated_at,
-            'data' => $suratJalan->toArray()
-        ]);
 
         // Hapus detail lama dan tambahkan detail baru
         $suratJalan->details()->delete();
@@ -114,15 +111,13 @@ class SuratJalanController extends Controller
                 'surat_jalan_id' => $suratJalan->id,
                 'namaBarang' => $namaBarang,
                 'jumlahBarang' => $request->jumlahBarang[$index],
+                'kode_barang' => $request->kode_barang[$index] ?? null,
+                'keterangan_barang' => $request->keterangan_barang[$index] ?? null,
             ]);
         }
 
         return redirect()->route('suratJalan.index')->with('success', "Data berhasil diperbarui");
     }
-
-
-
-
 
     public function destroy(SuratJalan $suratJalan)
     {
@@ -130,3 +125,4 @@ class SuratJalanController extends Controller
         return redirect()->route('suratJalan.index')->with('success', "Data berhasil dihapus");
     }
 }
+

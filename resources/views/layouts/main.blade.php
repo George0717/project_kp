@@ -10,7 +10,7 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
   <link rel="stylesheet" type="text/css"href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
   <link id="pagestyle" href="{{ asset('assets/assets/css/material-dashboard.min.css') }}" rel="stylesheet" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/css/bootstrap.min.css"integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
   <link href="/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <link rel="icon" href="{{ asset('assets/image/JM.png') }}" type="image">
@@ -37,6 +37,13 @@
     overflow-x: hidden;
   }
 
+  .action-buttons {
+        display: none;
+        white-space: nowrap;
+    }
+    #myTable tr.selected .action-buttons {
+        display: inline-block;
+    }
   .table {
     width: 100%;
     margin-bottom: 1rem;
@@ -79,85 +86,7 @@
   .table thead th {
     vertical-align: bottom;
     border-bottom: 2px solid #dee2e6;
-  }
-
-  /* Card Slick */
-  .history-slider {
-    width: 100%;
-    overflow: hidden;
-    margin-top: 20px;
-  }
-
-  .history-card {
-    border: 1px solid #ddd;
-    padding: 20px;
-    margin: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 200px;
-  }
-
-  .history-card h3 {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    text-align: center;
-    display: none;
-  }
-
-  .history-card p {
-    font-size: 0.9em;
-    line-height: 1.2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-  }
-
-  .history-card small {
-    font-size: 0.8em;
-    color: #888;
-  }
-
-  .history-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Gaya untuk slick slider */
-  .slick-slider {
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .slick-slide {
-    padding: 0 10px;
-  }
-
-  .slick-arrow {
-    background-color: #ddd;
-    border-radius: 50%;
-    padding: 10px;
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1000;
-  }
-
-  .slick-prev {
-    left: 0;
-  }
-
-  .slick-next {
-    right: 0;
-  }
-
-  /* End Card Slick */
+  }  
 
   .animated {
         animation-duration: 10s;
@@ -172,11 +101,9 @@
     @yield('page1')
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @stack('scripts')

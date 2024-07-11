@@ -78,6 +78,22 @@
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div class="form-group mb-4">
+                        <label for="kode_barang" class="form-label">Kode</label>
+                        <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror"
+                            id="kode_barang" name="kode_barang[]">
+                        @error('kode_barang.*')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="keterangan_barang" class="form-label">Keterangan</label>
+                        <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror"
+                            id="keterangan_barang" name="keterangan_barang[]">
+                        @error('keterangan_barang.*')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
                 <button type="button" id="tambah-barang" class="btn btn-primary mb-4">Tambah Barang</button>
                 <button type="submit" class="btn btn-success">Simpan</button>
@@ -98,6 +114,22 @@
             <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
             <input type="number" class="form-control" id="jumlahBarang" name="jumlahBarang[]">
         </div>
+        <div class="form-group mb-4">
+          <label for="kode_barang" class="form-label">Kode</label>
+                <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror"
+                id="kode_barang" name="kode_barang[]">
+                        @error('kode_barang.*')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="keterangan_barang" class="form-label">Keterangan</label>
+                        <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror"
+                            id="keterangan_barang" name="keterangan_barang[]">
+                        @error('keterangan_barang.*')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
     `;
     barangContainer.insertAdjacentHTML('beforeend', barangHTML);
 });

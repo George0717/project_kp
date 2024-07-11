@@ -22,6 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('surat_jalan_id'); // Relasi ke surat_jalans
             $table->string('namaBarang');
             $table->integer('jumlahBarang');
+            $table->string('kode_barang');
+            $table->string('keterangan_barang');
             $table->timestamps();
 
             // Foreign key constraint

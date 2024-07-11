@@ -13,6 +13,8 @@ class SuratJalanDetail extends Model
         'surat_jalan_id',
         'namaBarang',
         'jumlahBarang',
+        'kode_barang',
+        'keterangan_barang',
     ];
 
     public function suratJalan()

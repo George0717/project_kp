@@ -31,6 +31,7 @@
             <th>Nomor Surat</th>
             <th>Tanggal Kirim</th>
             <th>Tujuan Tempat</th>
+            <th>Nama Barang</th>
             <th>Aksi</th>
         </tr>
     </thead>
@@ -41,15 +42,26 @@
             <td>{{ \Carbon\Carbon::parse($suratJalan->tglKirim)->translatedFormat('d F Y') }}</td>
             <td>{{ $suratJalan->tujuanTempat }}</td>
             <td>
-                <a href="{{ route('suratJalan.show', $suratJalan) }}" class="btn btn-info">Detail</a>
-                <button class="btn btn-warning edit-button" data-id="{{ $suratJalan->id }}">Edit</button>
-                <button class="btn btn-danger delete-button" data-id="{{ $suratJalan->id }}">Hapus</button>
-                <form action="{{ route('suratJalan.destroy', $suratJalan) }}" method="post" class="delete-form"
-                    style="display: none;">
-                    @csrf
-                    @method('delete')
-                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                </form>
+                @foreach ($suratJalan->details as $detail)
+                    {{ $detail->namaBarang }}<br>
+                @endforeach
+            </td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton{{ $suratJalan->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                        Aksi
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $suratJalan->id }}">
+                        <li><a class="dropdown-item detail-button" href="{{ route('suratJalan.show', $suratJalan) }}">Detail</a></li>
+                        <li><a class="dropdown-item edit-button" href="#" data-id="{{ $suratJalan->id }}">Edit</a></li>
+                        <li><a class="dropdown-item delete-button" href="#" data-id="{{ $suratJalan->id }}">Hapus</a></li>
+                    </ul>
+                    <form action="{{ route('suratJalan.destroy', $suratJalan) }}" method="post" class="delete-form" style="display: none;">
+                        @csrf
+                        @method('delete')
+                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                    </form>
+                </div>
             </td>
         </tr>
         @endforeach
@@ -61,6 +73,7 @@
 @push('scripts')
 <script>
     $(document).ready(function () {
+        // Menangani klik pada tombol edit
         $('.edit-button').on('click', function (e) {
             e.preventDefault();
             var id = $(this).data('id');
@@ -82,6 +95,7 @@
             });
         });
 
+        // Menangani klik pada tombol hapus
         $('.delete-button').on('click', function (e) {
             e.preventDefault();
             var id = $(this).data('id');
@@ -104,19 +118,14 @@
                 }
             });
         });
-    });
-</script>
-@push('scripts')
-<script>
-$(document).ready(function() {
-    $("#tujuanTempat").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#myTable tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+
+        // Menangani pencarian berdasarkan tujuan tempat
+        $("#tujuanTempat").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
         });
     });
-});
 </script>
-@endpush
-
 @endpush
