@@ -27,6 +27,9 @@ class RedirectIfAuthenticated
                 return redirect(RouteServiceProvider::HOME);
             }
         }
+        if (Auth::guard($guard)->check()) {
+            return redirect('/dashboard'); // Sesuaikan dengan halaman utama setelah login
+        }
 
         return $next($request);
     }

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('dibuat_oleh');
             // Tujuan
             $table->string('lokasi');
-            $table->string('divisi_tujuan');           
+            $table->string('divisi_tujuan');   
+            $table->string('foto_mutasi');        
             $table->timestamps();
         });
 
@@ -28,7 +29,6 @@ return new class extends Migration
             $table->unsignedBigInteger('mutasi_id'); // Relasi ke mutasis
             $table->string('nama_barang');
             $table->string('merk');
-            $table->string('model');
             $table->string('kategori');
             $table->string('no_inventaris');
             $table->string('keterangan');

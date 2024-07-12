@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return view('auth.login');
+    return response()->view('auth.login')->header('Cache-Control', 'no-cache, no-store, must-revalidate');
 });
 Route::get('/register', function () {
     return view('auth.register');

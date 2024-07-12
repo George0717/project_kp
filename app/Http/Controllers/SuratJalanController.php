@@ -89,7 +89,7 @@ class SuratJalanController extends Controller
             'jumlahBarang.*' => 'required|integer',
             'kode_barang.*' => 'nullable|string',
             'keterangan_barang.*' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'foto' => 'required|file|image',
         ]);
 
         // Update surat jalan

@@ -13,7 +13,7 @@ class MutasiDetail extends Model
         'mutasi_id',
         'nama_barang',
         'merk',
-        'model', 'kategori', 'no_inventaris', 'keterangan'
+        'kategori', 'no_inventaris', 'keterangan'
     ];
 
     public function mutasi()

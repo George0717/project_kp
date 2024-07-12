@@ -30,20 +30,26 @@ class MutasiController extends Controller
             'divisi_tujuan' => 'required',
             'nama_barang.*' => 'required',
             'merk.*' => 'required',
-            'model.*' => 'required',
             'kategori.*' => 'required',
             'no_inventaris.*' => 'required',
-            'keterangan.*' => 'required',
+            'keterangan.*' => 'nullable',
+            'foto_mutasi' => 'nullable|file|image',
         ]);
 
-        $mutasi = Mutasi::create($request->only(['divisi_pengirim', 'penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan']));
+        $mutasi = Mutasi::create($request->only(['divisi_pengirim', 'penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan', 'foto_mutasi']));
+        if ($request->hasFile('foto_mutasi')) {
+            // Simpan foto ke dalam direktori public/images
+            $fotoPath = $request->file('foto_mutasi')->store('public/images');
 
+            // Ambil nama file dari $fotoPath dan simpan ke dalam field 'foto'
+            $mutasi->foto_mutasi = basename($fotoPath);
+            $mutasi->save();
+        }
         foreach ($request->nama_barang as $index => $nama_barang) {
             MutasiDetail::create([
                 'mutasi_id' => $mutasi->id,
                 'nama_barang' => $nama_barang,
                 'merk' => $request->merk[$index],
-                'model' => $request->model[$index],
                 'kategori' => $request->kategori[$index],
                 'no_inventaris' => $request->no_inventaris[$index],
                 'keterangan' => $request->keterangan[$index],
@@ -73,21 +79,27 @@ class MutasiController extends Controller
             'divisi_tujuan' => 'required',
             'nama_barang.*' => 'required',
             'merk.*' => 'required',
-            'model.*' => 'required',
             'kategori.*' => 'required',
             'no_inventaris.*' => 'required',
-            'keterangan.*' => 'required',
+            'keterangan.*' => 'nullable',
+            'foto_mutasi' => 'nullable|file|image',
         ]);
 
-        $mutasi->update($request->only(['divisi_pengirim', 'penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan']));
+        $mutasi->update($request->only(['divisi_pengirim', 'penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan','foto_mutasi']));
+        if ($request->hasFile('foto_mutasi')) {
+            // Simpan foto ke dalam direktori public/images
+            $fotoPath = $request->file('foto_mutasi')->store('public/images');
 
+            // Ambil nama file dari $fotoPath dan simpan ke dalam field 'foto'
+            $mutasi->foto_mutasi = basename($fotoPath);
+            $mutasi->save();
+        }
         $mutasi->details()->delete();
         foreach ($request->nama_barang as $index => $nama_barang) {
             MutasiDetail::create([
                 'mutasi_id' => $mutasi->id,
                 'nama_barang' => $nama_barang,
                 'merk' => $request->merk[$index],
-                'model' => $request->model[$index],
                 'kategori' => $request->kategori[$index],
                 'no_inventaris' => $request->no_inventaris[$index],
                 'keterangan' => $request->keterangan[$index],
