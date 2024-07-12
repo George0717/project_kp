@@ -20,6 +20,14 @@
                     @enderror
                 </div>
                 <div class="form-group mb-4">
+                    <label for="divisi_pengirim" class="form-label">From</label>
+                    <input type="text" class="form-control @error('divisi_pengirim') is-invalid @enderror" id="divisi_pengirim"
+                        name="divisi_pengirim" value="{{ old('divisi_pengirim') }}" placeholder="Contoh : Andre (IT/Lemabang)">
+                    @error('divisi_pengirim')
+                    <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="form-group mb-4">
                     <label for="tglKirim" class="form-label">Tanggal Kirim</label>
                     <input type="date" class="form-control @error('tglKirim') is-invalid @enderror" id="tglKirim"
                         name="tglKirim" value="{{ old('tglKirim') }}">

@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('mutasis', function (Blueprint $table) {
             $table->id();
             // Pengirim
-            $table->string('divisi_pengirim');
             $table->string('penanggung_jawab');
             $table->string('dibuat_oleh');
+            $table->date('tgl_buat');
             // Tujuan
             $table->string('lokasi');
             $table->string('divisi_tujuan');   

@@ -17,6 +17,7 @@ class SuratJalanFactory extends Factory
 
         return [
             'nomorSurat' => $faker->unique()->randomNumber(6),
+            'divisi_pengirim' => $faker->word,
             'tglKirim' => $faker->dateTimeBetween('2022-01-01', '2024-12-31'),
             'tujuanTempat' => $faker->randomElement([
                 'Grand JM', 'JM Lemabang', 'Gudang Bambang Utoyo', 'CM Sako',

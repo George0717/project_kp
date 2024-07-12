@@ -13,11 +13,11 @@
             <form action="{{ route('mutasi.update', $mutasi) }}" method="post" enctype="multipart/form-data">
                 @csrf
                 @method('put')
-                <div class="form-group mb-4 border">
-                    <label for="divisi_pengirim" class="form-label">Divisi Pengirim</label>
-                    <input type="text" class="form-control @error('divisi_pengirim') is-invalid @enderror"
-                        id="divisi_pengirim" name="divisi_pengirim" value="{{ $mutasi->divisi_pengirim }}">
-                    @error('divisi_pengirim')
+                <div class="form-group mb-4">
+                    <label for="tgl_buat" class="form-label">Tanggal Buat</label>
+                    <input type="date" class="form-control @error('tgl_buat') is-invalid @enderror" id="tgl_buat"
+                        name="tgl_buat" value="{{ old('tgl_buat') }}">
+                    @error('tgl_buat')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>

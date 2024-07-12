@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Mutasi extends Model
 {
     use HasFactory;
-    protected $fillable = ['divisi_pengirim', 'penanggung_jawab', 'dibuat_oleh','lokasi', 'divisi_tujuan', 'foto_mutasi'];
+    protected $fillable = [ 'penanggung_jawab', 'dibuat_oleh','lokasi', 'divisi_tujuan', 'foto_mutasi', 'tgl_buat'];
 
     public function details()
     {

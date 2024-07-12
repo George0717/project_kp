@@ -14,6 +14,7 @@ return new class extends Migration
             $table->date('tglKirim');
             $table->string('tujuanTempat');
             $table->string('foto');
+            $table->string('divisi_pengirim');
             $table->timestamps();
         });
 

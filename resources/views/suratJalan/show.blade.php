@@ -1,5 +1,4 @@
 @extends('layouts.main')
-
 @section('title', 'Detail Surat Jalan')
 @section('page1', 'Detail Surat Jalan')
 
@@ -13,6 +12,7 @@
             <div class="row mb-4">
                 <div class="col-md-6">
                     <p><strong>Nomor Surat:</strong> {{ $suratJalan->nomorSurat }}</p>
+                    <p><strong>From:</strong> {{ $suratJalan->divisi_pengirim }}</p>
                     <p><strong>Tanggal Kirim:</strong> {{ $suratJalan->tglKirim }}</p>
                     <p><strong>Tujuan Tempat:</strong> {{ $suratJalan->tujuanTempat }}</p>
                     <p><strong>Dibuat Pada:</strong> {{ $suratJalan->created_at->translatedFormat('d F Y') }}</p>

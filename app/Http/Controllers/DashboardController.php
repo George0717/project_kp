@@ -31,7 +31,7 @@ class DashboardController extends Controller
         // Hitung total Mutasi
         $totalMutasi = Mutasi::count();
         // Query untuk mendapatkan data bulanan Mutasi
-        $monthlyCountsMutasi = Mutasi::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count')
+        $monthlyCountsMutasi = Mutasi::selectRaw('YEAR(tgl_buat) as year, MONTH(tgl_buat) as month, COUNT(*) as count')
             ->groupBy('year', 'month')
             ->orderBy('year', 'asc')
             ->orderBy('month', 'asc')

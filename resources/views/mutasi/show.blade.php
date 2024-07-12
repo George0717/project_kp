@@ -12,7 +12,7 @@
         <div class="card-body">
             <div class="row mb-4">
                 <div class="col-md-6">
-                    <p><strong>Divisi Pengirim:</strong> {{ $mutasi->divisi_pengirim }}</p>
+                    <p><strong>Tanggal Buat:</strong> {{ \Carbon\Carbon::parse($mutasi->tgl_buat)->translatedFormat('d F Y') }}</p>
                     <p><strong>Penanggung Jawab:</strong> {{ $mutasi->penanggung_jawab }}</p>
                     <p><strong>Dibuat Oleh:</strong> {{ $mutasi->dibuat_oleh }}</p>
                     <p><strong>Lokasi:</strong> {{ $mutasi->lokasi }}</p>

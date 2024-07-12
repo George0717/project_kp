@@ -38,6 +38,7 @@ class SuratJalanController extends Controller
             'nomorSurat' => 'required|unique:surat_jalans|max:6|min:6',
             'tglKirim' => 'required|date',
             'tujuanTempat' => 'required',
+            'divisi_pengirim' => 'required',
             'namaBarang.*' => 'required',
             'jumlahBarang.*' => 'required|integer',
             'kode_barang.*' => 'nullable|string',
@@ -45,7 +46,7 @@ class SuratJalanController extends Controller
             'foto' => 'required|file|image',
         ]);
 
-        $suratJalan = SuratJalan::create($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat', 'foto']));
+        $suratJalan = SuratJalan::create($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat', 'foto','divisi_pengirim']));
 
         if ($request->hasFile('foto')) {
             // Simpan foto ke dalam direktori public/images
@@ -85,6 +86,7 @@ class SuratJalanController extends Controller
             'nomorSurat' => 'required|max:6',
             'tglKirim' => 'required|date',
             'tujuanTempat' => 'required',
+            'divisi_pengirim' => 'required',
             'namaBarang.*' => 'required',
             'jumlahBarang.*' => 'required|integer',
             'kode_barang.*' => 'nullable|string',
@@ -93,7 +95,7 @@ class SuratJalanController extends Controller
         ]);
 
         // Update surat jalan
-        $suratJalan->update($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat']));
+        $suratJalan->update($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat','divisi_pengirim','foto']));
 
         if ($request->hasFile('foto')) {
             // Simpan foto ke dalam direktori public/images

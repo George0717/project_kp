@@ -12,26 +12,32 @@
         <div class="card-body">
             <form action="{{ route('mutasi.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group mb-4 border">
-                    <label for="divisi_pengirim" class="form-label">Divisi Pengirim</label>
-                    <input type="text" class="form-control @error('divisi_pengirim') is-invalid @enderror"
-                        id="divisi_pengirim" name="divisi_pengirim">
-                    @error('divisi_pengirim')
+                <div class="form-group mb-4">
+                    <label for="tgl_buat" class="form-label">Tanggal Buat</label>
+                    <input type="date" class="form-control @error('tgl_buat') is-invalid @enderror" id="tgl_buat"
+                        name="tgl_buat" value="{{ old('tgl_buat') }}">
+                    @error('tgl_buat')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="form-group mb-4 border">
-                    <label for="penanggung_jawab" class="form-label">Penanggung Jawab</label>
-                    <input type="text" class="form-control @error('penanggung_jawab') is-invalid @enderror"
-                        id="penanggung_jawab" name="penanggung_jawab">
+                <div class="form-group mb-4">
+                    <label for="penanggung_jawab" class="form-label">Penanggung Jawab / Divisi</label>
+                    <select class="form-control @error('penanggung_jawab') is-invalid @enderror" id="penanggung_jawab" name="penanggung_jawab">
+                        <option value="">Divisi</option>
+                        <option value="IT" {{ old('penanggung_jawab')=='IT' ? 'selected' : '' }}>IT</option>
+                    </select>
                     @error('penanggung_jawab')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="form-group mb-4 border">
+                <div class="form-group mb-4">
                     <label for="dibuat_oleh" class="form-label">Dibuat Oleh</label>
-                    <input type="text" class="form-control @error('dibuat_oleh') is-invalid @enderror" id="dibuat_oleh"
-                        name="dibuat_oleh">
+                    <select class="form-control @error('dibuat_oleh') is-invalid @enderror" id="dibuat_oleh" name="dibuat_oleh">
+                        <option value="">Pilih dibuat oleh</option>
+                        <option value="Andre" {{ old('dibuat_oleh')=='Andre' ? 'selected' : '' }}>Andre</option>
+                        <option value="Rudy" {{ old('dibuat_oleh')=='Rudy' ? 'selected' : '' }}>Rudy</option>
+                        <option value="Alvien" {{ old('dibuat_oleh')=='Alvien' ? 'selected' : '' }}>Alvien</option>
+                    </select>
                     @error('dibuat_oleh')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror

@@ -9,9 +9,22 @@ use Illuminate\Support\Str;
 
 class MutasiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $mutasis = Mutasi::with('details')->get();
+        $query = Mutasi::with('details');
+
+        if ($request->filled('tgl_buat')) {
+            $query->whereDate('tgl_buat', $request->tgl_buat);
+        }
+    
+        if ($request->filled('tujuan_tempat')) {
+            $query->whereHas('details', function ($q) use ($request) {
+                $q->where('nama_barang', 'like', '%' . $request->tujuan_tempat . '%');
+            });
+        }
+    
+        $mutasis = $query->get();
+    
         return view('mutasi.index', compact('mutasis'));
     }
 
@@ -23,9 +36,10 @@ class MutasiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'divisi_pengirim' => 'required',
+            'divisi_pengirim' => 'nullable',
             'penanggung_jawab' => 'required',
             'dibuat_oleh' => 'required',
+            'tgl_buat' => 'required|date',
             'lokasi' => 'required',
             'divisi_tujuan' => 'required',
             'nama_barang.*' => 'required',
@@ -36,7 +50,7 @@ class MutasiController extends Controller
             'foto_mutasi' => 'nullable|file|image',
         ]);
 
-        $mutasi = Mutasi::create($request->only(['divisi_pengirim', 'penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan', 'foto_mutasi']));
+        $mutasi = Mutasi::create($request->only(['penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan', 'foto_mutasi', 'tgl_buat']));
         if ($request->hasFile('foto_mutasi')) {
             // Simpan foto ke dalam direktori public/images
             $fotoPath = $request->file('foto_mutasi')->store('public/images');
@@ -72,9 +86,9 @@ class MutasiController extends Controller
     public function update(Request $request, Mutasi $mutasi)
     {
         $request->validate([
-            'divisi_pengirim' => 'required',
             'penanggung_jawab' => 'required',
             'dibuat_oleh' => 'required',
+            'tgl_buat' => 'required|date',
             'lokasi' => 'required',
             'divisi_tujuan' => 'required',
             'nama_barang.*' => 'required',
@@ -85,7 +99,7 @@ class MutasiController extends Controller
             'foto_mutasi' => 'nullable|file|image',
         ]);
 
-        $mutasi->update($request->only(['divisi_pengirim', 'penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan','foto_mutasi']));
+        $mutasi = Mutasi::create($request->only(['penanggung_jawab', 'dibuat_oleh', 'tgl_buat', 'lokasi', 'divisi_tujuan']));
         if ($request->hasFile('foto_mutasi')) {
             // Simpan foto ke dalam direktori public/images
             $fotoPath = $request->file('foto_mutasi')->store('public/images');

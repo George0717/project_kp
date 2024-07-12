@@ -10,11 +10,10 @@
 <form action="{{ route('mutasi.index') }}" method="GET" class="mb-3">
     <div class="row">
         <div class="col-md-4">
-            <!-- Biarkan ini kosong atau sesuaikan dengan kebutuhan filter Mutasi -->
-            <input type="text" id="searchInput" class="form-control" placeholder="Cari...">
+            <input type="date" name="tgl_buat" class="form-control" placeholder="Tanggal Buat" value="{{ request('tgl_buat') }}">
         </div>
         <div class="col-md-4">
-            <!-- Biarkan ini kosong atau sesuaikan dengan kebutuhan filter Mutasi -->
+            <input type="text" name="tujuan_tempat" id="nama_barang" class="form-control" placeholder="Cari Nama Barang" value="{{ request('tujuan_tempat') }}">
         </div>
         <div class="col-md-4">
             <button type="submit" class="btn btn-primary">Filter</button>
@@ -23,47 +22,56 @@
     </div>
 </form>
 
-<table class="table table-striped table-bordered text-center">
-    <thead>
-        <tr>
-            <th>Divisi Pengirim</th>
-            <th>Penanggung Jawab</th>
-            <th>Dibuat Oleh</th>
-            <th>Divisi Tujuan</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody id="myTable">
-        @foreach ($mutasis as $mutasi)
-        <tr>
-            <td>{{ $mutasi->divisi_pengirim }}</td>
-            <td>{{ $mutasi->penanggung_jawab }}</td>
-            <td>{{ $mutasi->dibuat_oleh }}</td>
-            <td>{{ $mutasi->divisi_tujuan }}</td>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button"
-                        id="dropdownMenuButton{{ $mutasi->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                        Aksi
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $mutasi->id }}">
-                        <li><a class="dropdown-item detail-button" href="{{ route('mutasi.show', $mutasi) }}">Detail</a>
-                        </li>
-                        <li><a class="dropdown-item edit-button" href="#" data-id="{{ $mutasi->id }}">Edit</a></li>
-                        <li><a class="dropdown-item delete-button" href="#" data-id="{{ $mutasi->id }}">Hapus</a></li>
-                    </ul>
-                    <form action="{{ route('mutasi.destroy', $mutasi) }}" method="post" class="delete-form"
-                        style="display: none;">
-                        @csrf
-                        @method('delete')
-                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+@if($mutasis->isEmpty())
+    <div class="alert alert-warning text-center">
+        Data tidak ditemukan
+    </div>
+@else
+    <table class="table table-striped table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Tanggal Buat</th>
+                <th>Penanggung Jawab</th>
+                <th>Divisi Tujuan</th>
+                <th>Nama Barang</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            @foreach ($mutasis as $mutasi)
+            <tr>
+                <td>{{ \Carbon\Carbon::parse($mutasi->tgl_buat)->translatedFormat('d F Y') }}</td>
+                <td>{{ $mutasi->penanggung_jawab }}</td>
+                <td>{{ $mutasi->divisi_tujuan }}</td>
+                <td>
+                    @foreach ($mutasi->details as $detail)
+                    {{ $detail->nama_barang }}<br>
+                    @endforeach
+                </td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                            id="dropdownMenuButton{{ $mutasi->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                            Aksi
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $mutasi->id }}">
+                            <li><a class="dropdown-item detail-button" href="{{ route('mutasi.show', $mutasi) }}">Detail</a></li>
+                            <li><a class="dropdown-item edit-button" href="#" data-id="{{ $mutasi->id }}">Edit</a></li>
+                            <li><a class="dropdown-item delete-button" href="#" data-id="{{ $mutasi->id }}">Hapus</a></li>
+                        </ul>
+                        <form action="{{ route('mutasi.destroy', $mutasi) }}" method="post" class="delete-form"
+                            style="display: none;">
+                            @csrf
+                            @method('delete')
+                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif
 @endsection
 
 @push('scripts')
@@ -115,8 +123,8 @@
             });
         });
 
-        // Fungsi untuk pencarian berdasarkan nama barang
-        $("#searchInput").on("keyup", function() {
+         // Menangani pencarian berdasarkan tujuan tempat
+         $("#nama_barang").on("keyup", function() {
             var value = $(this).val().toLowerCase();
             $("#myTable tr").filter(function() {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
