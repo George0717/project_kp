@@ -1,11 +1,11 @@
-@extends('layouts.main')
+@extends('layouts.admin')
 @section('title', 'Daftar Surat Jalan')
 @section('page1', 'Daftar Surat Jalan')
 @section('container')
-<a href="{{ route('suratJalan.create') }}" class="btn btn-primary mb-3">Tambah Surat Jalan</a>
+<a href="{{ route('admin.suratJalan.create') }}" class="btn btn-primary mb-3">Tambah Surat Jalan</a>
 
 <!-- Filter Form -->
-<form action="{{ route('suratJalan.index') }}" method="GET" class="mb-3">
+<form action="{{ route('admin.suratJalan.index') }}" method="GET" class="mb-3">
     <div class="row">
         <div class="col-md-4">
             <input type="date" name="tglKirim" class="form-control" placeholder="Tanggal Kirim" value="{{ request('tglKirim') }}">
@@ -15,7 +15,7 @@
         </div>
         <div class="col-md-4">
             <button type="submit" class="btn btn-primary">Filter</button>
-            <a href="{{ route('suratJalan.index') }}" class="btn btn-secondary ml-2">Reset</a>
+            <a href="{{ route('admin.suratJalan.index') }}" class="btn btn-secondary ml-2">Reset</a>
         </div>
     </div>
 </form>
@@ -52,7 +52,7 @@
                         Aksi
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $suratJalan->id }}">
-                        <li><a class="dropdown-item detail-button" href="{{ route('suratJalan.show', $suratJalan) }}">Detail</a></li>
+                        <li><a class="dropdown-item detail-button" href="{{ route('admin.suratJalan.show', $suratJalan) }}">Detail</a></li>
                         <li><a class="dropdown-item edit-button" href="#" data-id="{{ $suratJalan->id }}">Edit</a></li>
                         <li><a class="dropdown-item delete-button" href="#" data-id="{{ $suratJalan->id }}">Hapus</a></li>
                     </ul>
@@ -81,7 +81,7 @@
         $('.edit-button').on('click', function (e) {
             e.preventDefault();
             var id = $(this).data('id');
-            var url = "{{ route('suratJalan.edit', ':id') }}";
+            var url = "{{ route('admin.suratJalan.edit', ':id') }}";
             url = url.replace(':id', id);
 
             Swal.fire({
@@ -104,7 +104,7 @@
             e.preventDefault();
             var id = $(this).data('id');
             var form = $(this).closest('tr').find('.delete-form');
-            var url = "{{ route('suratJalan.destroy', ':id') }}";
+            var url = "{{ route('admin.suratJalan.destroy', ':id') }}";
             url = url.replace(':id', id);
 
             Swal.fire({

@@ -1,35 +1,24 @@
-@extends('layouts.main')
+@extends('layouts.admin')
 
 @section('container')
 <div class="row mb-4">
     <div class="col-lg-12">
         <div class="col-lg-12">
-            <div class="col-lg-12">
-                <h4>Selamat datang, {{ Auth::user()->name }}</h4>
-            </div>
+            <h4>Selamat datang, {{ Auth::user()->name }}</h4>
         </div>
-        <form id="filterForm" class="form-inline">
-            <div class="form-group mr-3">
-                <label for="year" class="mr-2">Tahun:</label>
-                <select id="year" name="year" class="form-control">
-                    @foreach($years as $year)
-                        <option value="{{ $year }}">{{ $year }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group mr-3">
-                <label for="month" class="mr-2">Bulan:</label>
-                <select id="month" name="month" class="form-control">
-                    <option value="all">Semua</option>
-                    @foreach($months as $key => $month)
-                        <option value="{{ $key }}">{{ $month }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <button type="button" id="filterButton" class="btn btn-primary">Filter</button>
-            <button type="button" id="resetButton" class="btn btn-secondary ml-2">Reset</button>
-        </form>
     </div>
+    <form id="filterForm" class="form-inline">
+        <div class="form-group mr-3">
+            <label for="startDate" class="mr-2">Dari Tanggal:</label>
+            <input type="date" id="startDate" name="startDate" class="form-control">
+        </div>
+        <div class="form-group mr-3">
+            <label for="endDate" class="mr-2">Sampai Tanggal:</label>
+            <input type="date" id="endDate" name="endDate" class="form-control">
+        </div>
+        <button type="button" id="filterButton" class="btn btn-primary">Filter</button>
+        <button type="button" id="resetButton" class="btn btn-secondary ml-2">Reset</button>
+    </form>
 </div>
 
 <div class="row">
@@ -73,6 +62,22 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <!-- Active Users Card -->
+    <div class="col-lg-12 mb-4">
+        <div class="card shadow-sm" style="animation: fadeInUp 1s ease;">
+            <div class="card-header">
+                Pengguna Aktif
+            </div>
+            <div class="card-body">
+                <h5 class="card-title" id="activeUsers">{{ $activeUsers }}</h5>
+                <p class="card-text">Jumlah pengguna aktif saat ini</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -128,10 +133,10 @@
         renderChart({!! json_encode($labelsSuratJalan) !!}, {!! json_encode($dataSuratJalan) !!}, {!! json_encode($dataMutasi) !!});
 
         document.getElementById('filterButton').addEventListener('click', function () {
-            const year = document.getElementById('year').value;
-            const month = document.getElementById('month').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
 
-            fetch(`{{ route('dashboard.filter') }}?year=${year}&month=${month}`)
+            fetch(`{{ route('dashboard.filter') }}?startDate=${startDate}&endDate=${endDate}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('totalSuratJalan').innerText = data.totalSuratJalan;
@@ -142,10 +147,9 @@
         });
 
         document.getElementById('resetButton').addEventListener('click', function () {
-            document.getElementById('year').value = '{{ date("Y") }}';
-            document.getElementById('month').value = 'all';
-
-            fetch(`{{ route('dashboard.filter') }}?year={{ date("Y") }}&month=all`)
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            fetch(`{{ route('dashboard.filter') }}`)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('totalSuratJalan').innerText = data.totalSuratJalan;
