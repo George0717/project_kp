@@ -1,30 +1,34 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Log;
 use App\Models\Mutasi;
 use App\Models\MutasiDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminMutasiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Mutasi::with('details');
+        $query = Mutasi::query();
 
         if ($request->filled('tgl_buat')) {
             $query->whereDate('tgl_buat', $request->tgl_buat);
         }
-    
+
         if ($request->filled('tujuan_tempat')) {
             $query->whereHas('details', function ($q) use ($request) {
                 $q->where('nama_barang', 'like', '%' . $request->tujuan_tempat . '%');
             });
         }
-    
-        $mutasis = $query->get();
-    
+
+        $mutasis = $query->with('details')->get();
+
         return view('admin.mutasi.index', compact('mutasis'));
     }
+
 
     public function create()
     {
@@ -67,7 +71,7 @@ class AdminMutasiController extends Controller
                 'keterangan' => $request->keterangan[$index],
             ]);
         }
-
+        $this->logHistory('Created', 'mutasi', $mutasi->id);
         return redirect()->route('admin.mutasi.index')->with('success', "Data berhasil disimpan");
     }
 
@@ -78,7 +82,7 @@ class AdminMutasiController extends Controller
 
     public function edit(Mutasi $mutasi)
     {
-        return view('mutasi.edit', compact('mutasi'));
+        return view('admin.mutasi.edit', compact('mutasi'));
     }
 
     public function update(Request $request, Mutasi $mutasi)
@@ -117,13 +121,24 @@ class AdminMutasiController extends Controller
                 'keterangan' => $request->keterangan[$index],
             ]);
         }
-
+        $this->logHistory('Updated', 'mutasi', $mutasi->id);
         return redirect()->route('admin.mutasi.index')->with('success', "Data berhasil diperbarui");
     }
 
     public function destroy(Mutasi $mutasi)
     {
         $mutasi->delete();
+        $this->logHistory('Deleted', 'mutasi', $mutasi->id);
         return redirect()->route('admin.mutasi.index')->with('success', "Data berhasil dihapus");
+    }
+
+    protected function logHistory($action, $model, $model_id)
+    {
+        Log::create([
+            'user_id' => Auth::id(),
+            'action' => $action,
+            'model' => $model,
+            'model_id' => $model_id,
+        ]);
     }
 }

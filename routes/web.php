@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminMutasiController;
+use App\Http\Controllers\AdminSuratJalanController;
 use App\Http\Controllers\AdminSuratJalanControllerController;
+use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\LogController;
 
 Route::get('/', function () {
     return response()->view('auth.login')->header('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -39,7 +42,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 
-Route::middleware(['auth', 'admin', 'last.activity'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/admin/users/create', [AdminController::class, 'create'])->name('admin.users.create');
@@ -47,17 +50,21 @@ Route::middleware(['auth', 'admin', 'last.activity'])->group(function () {
     Route::get('/admin/users/{id}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
     Route::put('/admin/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+    Route::get('/admin/logs', [LogController::class, 'index'])->name('admin.logs.index');
+    Route::get('/admin/logs/{log}', [LogController::class, 'show'])->name('admin.logs.show');
+    Route::post('/admin/logs/{log}/restore', [LogController::class, 'restore'])->name('admin.logs.restore');
+
 });
 
 // Admin Routes for Surat Jalan
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/admin/surat', [AdminSuratJalanControllerController::class, 'index'])->name('admin.suratJalan.index');
-    Route::get('/admin/surat/create', [AdminSuratJalanControllerController::class, 'create'])->name('admin.suratJalan.create');
-    Route::post('/admin/surat/store', [AdminSuratJalanControllerController::class, 'store'])->name('admin.suratJalan.store');
-    Route::get('/admin/surat/{suratJalan}', [AdminSuratJalanControllerController::class, 'show'])->name('admin.suratJalan.show');
-    Route::get('/admin/surat/{suratJalan}/edit', [AdminSuratJalanControllerController::class, 'edit'])->name('admin.suratJalan.edit');
-    Route::put('/admin/surat/{suratJalan}', [AdminSuratJalanControllerController::class, 'update'])->name('admin.suratJalan.update');
-    Route::delete('/admin/surat/{suratJalan}', [AdminSuratJalanControllerController::class, 'destroy'])->name('admin.suratJalan.destroy');
+Route::middleware(['auth', 'admin', 'log.crud'])->prefix('admin')->group(function () {
+    Route::get('/admin/surat', [AdminSuratJalanController::class, 'index'])->name('admin.suratJalan.index');
+    Route::get('/admin/surat/create', [AdminSuratJalanController::class, 'create'])->name('admin.suratJalan.create');
+    Route::post('/admin/surat/store', [AdminSuratJalanController::class, 'store'])->name('admin.suratJalan.store');
+    Route::get('/admin/surat/{suratJalan}', [AdminSuratJalanController::class, 'show'])->name('admin.suratJalan.show');
+    Route::get('/admin/surat/{suratJalan}/edit', [AdminSuratJalanController::class, 'edit'])->name('admin.suratJalan.edit');
+    Route::put('/admin/surat/{suratJalan}', [AdminSuratJalanController::class, 'update'])->name('admin.suratJalan.update');
+    Route::delete('/admin/surat/{suratJalan}', [AdminSuratJalanController::class, 'destroy'])->name('admin.suratJalan.destroy');
 });
 
 // Admin Routes for Mutasi
@@ -69,6 +76,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/mutasi/{mutasi}/edit', [AdminMutasiController::class, 'edit'])->name('admin.mutasi.edit');
     Route::put('/mutasi/{mutasi}', [AdminMutasiController::class, 'update'])->name('admin.mutasi.update');
     Route::delete('/mutasi/{mutasi}', [AdminMutasiController::class, 'destroy'])->name('admin.mutasi.destroy');
+
 });
 
 

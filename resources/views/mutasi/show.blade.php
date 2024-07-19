@@ -17,8 +17,8 @@
                     <p><strong>Dibuat Oleh:</strong> {{ $mutasi->dibuat_oleh }}</p>
                     <p><strong>Lokasi:</strong> {{ $mutasi->lokasi }}</p>
                     <p><strong>Divisi Tujuan:</strong> {{ $mutasi->divisi_tujuan }}</p>
-                    <p><strong>Dibuat Pada:</strong> {{ $mutasi->created_at->translatedFormat('d F Y') }}</p>
-                    <p><strong>Diperbarui Pada:</strong> {{ $mutasi->updated_at->translatedFormat('d F Y') }}</p>
+                    <p><strong>Dibuat Pada:</strong> {{ $mutasi->created_at->translatedFormat('d F Y H:i') }}</p>
+                    <p><strong>Diperbarui Pada:</strong> {{ $mutasi->updated_at->translatedFormat('d F Y H:i') }}</p>
                 </div>
                 <div class="col-md-6 text-center">
                     @if ($mutasi->foto_mutasi)

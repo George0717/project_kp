@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\SuratJalan;
 use App\Models\SuratJalanDetail;
+use App\Models\History;
+use App\Models\Log;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class SuratJalanController extends Controller
 {
@@ -46,13 +47,10 @@ class SuratJalanController extends Controller
             'foto' => 'required|file|image',
         ]);
 
-        $suratJalan = SuratJalan::create($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat', 'foto','divisi_pengirim']));
+        $suratJalan = SuratJalan::create($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat', 'foto', 'divisi_pengirim']));
 
         if ($request->hasFile('foto')) {
-            // Simpan foto ke dalam direktori public/images
             $fotoPath = $request->file('foto')->store('public/images');
-
-            // Ambil nama file dari $fotoPath dan simpan ke dalam field 'foto'
             $suratJalan->foto = basename($fotoPath);
             $suratJalan->save();
         }
@@ -66,6 +64,9 @@ class SuratJalanController extends Controller
                 'keterangan_barang' => $request->keterangan_barang[$index] ?? null,
             ]);
         }
+
+        // Catat tindakan pengguna ke dalam history
+        $this->logHistory('Created', 'SuratJalan', $suratJalan->id);
 
         return redirect()->route('suratJalan.index')->with('success', "Data berhasil disimpan");
     }
@@ -91,23 +92,19 @@ class SuratJalanController extends Controller
             'jumlahBarang.*' => 'required|integer',
             'kode_barang.*' => 'nullable|string',
             'keterangan_barang.*' => 'nullable|string',
-            'foto' => 'required|file|image',
+            'foto' => 'nullable|file|image',
         ]);
 
-        // Update surat jalan
-        $suratJalan->update($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat','divisi_pengirim','foto']));
+        $suratJalan->update($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat', 'divisi_pengirim', 'foto']));
 
         if ($request->hasFile('foto')) {
-            // Simpan foto ke dalam direktori public/images
             $fotoPath = $request->file('foto')->store('public/images');
-
-            // Ambil nama file dari $fotoPath dan simpan ke dalam field 'foto'
             $suratJalan->foto = basename($fotoPath);
             $suratJalan->save();
         }
 
-        // Hapus detail lama dan tambahkan detail baru
         $suratJalan->details()->delete();
+
         foreach ($request->namaBarang as $index => $namaBarang) {
             SuratJalanDetail::create([
                 'surat_jalan_id' => $suratJalan->id,
@@ -118,13 +115,30 @@ class SuratJalanController extends Controller
             ]);
         }
 
+        // Catat tindakan pengguna ke dalam history
+        $this->logHistory('Updated', 'SuratJalan', $suratJalan->id);
+
         return redirect()->route('suratJalan.index')->with('success', "Data berhasil diperbarui");
     }
 
     public function destroy(SuratJalan $suratJalan)
     {
         $suratJalan->delete();
+
+        // Catat tindakan pengguna ke dalam history
+        $this->logHistory('Deleted', 'SuratJalan', $suratJalan->id);
+
         return redirect()->route('suratJalan.index')->with('success', "Data berhasil dihapus");
     }
-}
 
+    // Fungsi untuk mencatat tindakan pengguna ke dalam history
+    protected function logHistory($action, $model, $model_id)
+    {
+        Log::create([
+            'user_id' => Auth::id(),
+            'action' => $action,
+            'model' => $model,
+            'model_id' => $model_id,
+        ]);
+    }
+}

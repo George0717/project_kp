@@ -15,8 +15,8 @@
                     <p><strong>From:</strong> {{ $suratJalan->divisi_pengirim }}</p>
                     <p><strong>Tanggal Kirim:</strong> {{ $suratJalan->tglKirim }}</p>
                     <p><strong>Tujuan Tempat:</strong> {{ $suratJalan->tujuanTempat }}</p>
-                    <p><strong>Dibuat Pada:</strong> {{ $suratJalan->created_at->translatedFormat('d F Y') }}</p>
-                    <p><strong>Diperbarui Pada:</strong> {{ $suratJalan->updated_at->translatedFormat('d F Y') }}</p>
+                    <p><strong>Dibuat Pada:</strong> {{ $suratJalan->created_at->translatedFormat('d F Y:i') }}</p>
+                    <p><strong>Diperbarui Pada:</strong> {{ $suratJalan->updated_at->translatedFormat('d F Y:i') }}</p>
                 </div>
                 <div class="col-md-6 text-center">
                     @if ($suratJalan->foto)

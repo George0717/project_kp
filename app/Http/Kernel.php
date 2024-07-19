@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'isAdmin' => \App\Http\Middleware\IsAdmin::class,
         'last.activity' => \App\Http\Middleware\UpdateLastActivity::class,
+        'log.crud' => \App\Http\Middleware\LogCrudActions::class,
     ];
 }

@@ -91,7 +91,7 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="kode_barang" class="form-label">Kode Barang</label>
-                        <input type="number" class="form-control @error('kode_barang.*') is-invalid @enderror"
+                        <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror"
                             name="kode_barang[]" value="{{ $detail->kode_barang }}">
                         @error('kode_barang.*')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="keterangan_barang" class="form-label">Keterangan</label>
-                        <input type="number" class="form-control @error('keterangan_barang.*') is-invalid @enderror"
+                        <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror"
                             name="keterangan_barang[]" value="{{ $detail->keterangan_barang }}">
                         @error('keterangan_barang.*')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -134,14 +134,14 @@
             </div>
             <div class="form-group mb-4">
                             <label for="kode_barang" class="form-label">Kode Barang</label>
-                            <input type="number" class="form-control @error('kode_barang.*') is-invalid @enderror" name="kode_barang[]" value="{{ $detail->kode_barang }}">
+                            <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror" name="kode_barang[]" value="{{ $detail->kode_barang }}">
                             @error('kode_barang.*')
                             <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group mb-4">
                             <label for="keterangan_barang" class="form-label">Keterangan</label>
-                            <input type="number" class="form-control @error('keterangan_barang.*') is-invalid @enderror" name="keterangan_barang[]" value="{{ $detail->keterangan_barang }}">
+                            <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror" name="keterangan_barang[]" value="{{ $detail->keterangan_barang }}">
                             @error('keterangan_barang.*')
                             <span class="invalid-feedback">{{ $message }}</span>
                             @enderror

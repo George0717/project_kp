@@ -17,9 +17,9 @@ class SuratJalanDetail extends Model
         'keterangan_barang',
     ];
 
+    public $timestamps = true;
     public function suratJalan()
     {
         return $this->belongsTo(SuratJalan::class);
     }
-    public $timestamps = true;
 }

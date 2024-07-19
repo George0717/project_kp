@@ -20,8 +20,17 @@ return new class extends Migration
             // Tujuan
             $table->string('lokasi');
             $table->string('divisi_tujuan');   
-            $table->string('foto_mutasi');        
+            $table->string('foto_mutasi')->nullable();        
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('deleted_by')->nullable();
+            $table->softDeletes();
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('deleted_by')->references('id')->on('users')->onDelete('set null');
         });
 
         Schema::create('mutasi_details', function (Blueprint $table) {
@@ -33,6 +42,7 @@ return new class extends Migration
             $table->string('no_inventaris');
             $table->string('keterangan');
             $table->timestamps();
+
             // Foreign key constraint
             $table->foreign('mutasi_id')->references('id')->on('mutasis')->onDelete('cascade');
         });
@@ -43,6 +53,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('mutasi_details');
         Schema::dropIfExists('mutasis');
     }
 };

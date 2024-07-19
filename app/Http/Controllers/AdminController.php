@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -80,5 +81,11 @@ class AdminController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
+    }
+
+    public function logHistory()
+    {
+        $histories = History::with('user')->paginate(10); // Menggunakan paginate() untuk pagination
+        return view('admin.history', compact('histories'));
     }
 }
