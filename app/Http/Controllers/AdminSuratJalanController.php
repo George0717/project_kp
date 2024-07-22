@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\SuratJalan;
 use App\Models\SuratJalanDetail;
-use App\Models\History;
 use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,13 +65,14 @@ class AdminSuratJalanController extends Controller
         }
 
         // Catat tindakan pengguna ke dalam history
-        $this->logHistory('Created', 'SuratJalan', $suratJalan->id);
+        $this->logHistory('Created', 'SuratJalan', $suratJalan->id, $request->all());
 
         return redirect()->route('admin.suratJalan.index')->with('success', "Data berhasil disimpan");
     }
 
     public function show(SuratJalan $suratJalan)
     {
+        $suratJalan->load('details');
         return view('admin.suratJalan.show', compact('suratJalan'));
     }
 
@@ -95,6 +95,9 @@ class AdminSuratJalanController extends Controller
             'foto' => 'nullable|file|image',
         ]);
 
+        $oldData = $suratJalan->toArray();
+
+
         $suratJalan->update($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat', 'divisi_pengirim', 'foto']));
 
         if ($request->hasFile('foto')) {
@@ -116,29 +119,54 @@ class AdminSuratJalanController extends Controller
         }
 
         // Catat tindakan pengguna ke dalam history
-        $this->logHistory('Updated', 'SuratJalan', $suratJalan->id);
+        $this->logHistory('Updated', 'SuratJalan', $suratJalan->id, $oldData, $request->all());
 
         return redirect()->route('admin.suratJalan.index')->with('success', "Data berhasil diperbarui");
     }
 
     public function destroy(SuratJalan $suratJalan)
     {
+        $oldData = $suratJalan->toArray();
+
         $suratJalan->delete();
 
         // Catat tindakan pengguna ke dalam history
-        $this->logHistory('Deleted', 'SuratJalan', $suratJalan->id);
+        $this->logHistory('Deleted', 'SuratJalan', $suratJalan->id, $oldData);
+
 
         return redirect()->route('admin.suratJalan.index')->with('success', "Data berhasil dihapus");
     }
 
     // Fungsi untuk mencatat tindakan pengguna ke dalam history
-    protected function logHistory($action, $model, $model_id)
+    protected function logHistory($action, $model, $model_id, $oldData = null, $newData = null)
     {
+        $details = [];
+
+        if ($model === 'SuratJalan') {
+            $suratJalan = SuratJalan::find($model_id);
+
+            if ($suratJalan) {
+                $details = $suratJalan->details->map(function ($detail) {
+                    return [
+                        'namaBarang' => $detail->namaBarang,
+                        'jumlahBarang' => $detail->jumlahBarang,
+                        'kodeBarang' => $detail->kodeBarang ?? '-',
+                        'keteranganBarang' => $detail->keteranganBarang ?? '-',
+                    ];
+                })->toArray();
+            }
+        }
+
         Log::create([
             'user_id' => Auth::id(),
             'action' => $action,
             'model' => $model,
             'model_id' => $model_id,
+            'changes' => json_encode([
+                'old' => $oldData,
+                'new' => $newData,
+                'details' => $details,
+            ]),
         ]);
     }
 }

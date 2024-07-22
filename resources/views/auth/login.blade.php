@@ -22,9 +22,6 @@
 
         <!-- Remember Me -->
         <div class="flex items-center justify-end mt-4">
-            <x-primary-button class="ms-3 m-2">
-                <a href="{{ route('admin.login') }}">Admin</a>
-            </x-primary-button>
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
             </x-primary-button>
