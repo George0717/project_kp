@@ -66,13 +66,13 @@ class SuratJalanController extends Controller
         }
 
         // Catat tindakan pengguna ke dalam history
-        $this->logHistory('Created', 'SuratJalan', $suratJalan->id);
-
+        $this->logHistory('Created', 'SuratJalan', $suratJalan->id, $request->all());
         return redirect()->route('suratJalan.index')->with('success', "Data berhasil disimpan");
     }
 
     public function show(SuratJalan $suratJalan)
     {
+        $suratJalan->load('details');
         return view('suratJalan.show', compact('suratJalan'));
     }
 
@@ -95,6 +95,7 @@ class SuratJalanController extends Controller
             'foto' => 'nullable|file|image',
         ]);
 
+        $oldData = $suratJalan->toArray();
         $suratJalan->update($request->only(['nomorSurat', 'tglKirim', 'tujuanTempat', 'divisi_pengirim', 'foto']));
 
         if ($request->hasFile('foto')) {
@@ -116,8 +117,7 @@ class SuratJalanController extends Controller
         }
 
         // Catat tindakan pengguna ke dalam history
-        $this->logHistory('Updated', 'SuratJalan', $suratJalan->id);
-
+        $this->logHistory('Updated', 'SuratJalan', $suratJalan->id, $oldData, $request->all());
         return redirect()->route('suratJalan.index')->with('success', "Data berhasil diperbarui");
     }
 
@@ -132,13 +132,35 @@ class SuratJalanController extends Controller
     }
 
     // Fungsi untuk mencatat tindakan pengguna ke dalam history
-    protected function logHistory($action, $model, $model_id)
+    protected function logHistory($action, $model, $model_id, $oldData = null, $newData = null)
     {
+        $details = [];
+
+        if ($model === 'SuratJalan') {
+            $suratJalan = SuratJalan::with('details')->find($model_id);
+
+            if ($suratJalan) {
+                $details = $suratJalan->details->map(function ($detail) {
+                    return [
+                        'namaBarang' => $detail->namaBarang,
+                        'jumlahBarang' => $detail->jumlahBarang,
+                        'kodeBarang' => $detail->kode_barang ?? '-',
+                        'keteranganBarang' => $detail->keterangan_barang ?? '-',
+                    ];
+                })->toArray();
+            }
+        }
+
         Log::create([
             'user_id' => Auth::id(),
             'action' => $action,
             'model' => $model,
             'model_id' => $model_id,
+            'changes' => json_encode([
+                'old' => $oldData,
+                'new' => $newData,
+                'details' => $details,
+            ]),
         ]);
     }
 }

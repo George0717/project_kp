@@ -2,207 +2,143 @@
 
 @section('container')
 <div class="container">
-    <h1>Detail Log</h1>
-
-    <div class="mb-3">
-        <a href="{{ route('admin.logs.index') }}" class="btn btn-primary">Kembali</a>
-    </div>
-
-    <div class="card mb-3">
-        <div class="card-header">
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
             Log Details
         </div>
-        <div class="card-body" id="log-details">
-            <div class="row mb-2">
-                <div class="col-sm-3 font-weight-bold">User:</div>
-                <div class="col-sm-9">{{ $log->user ? $log->user->name : 'Unknown' }}</div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h5 class="card-title">Log ID: {{ $log->id }}</h5>
+                    <p><strong>User :</strong> {{ $log->user->name ?? 'Unknown' }}</p>
+                    <p><strong>Aksi :</strong> {{ $log->action }}</p>
+                    <p><strong>Model :</strong> {{ $log->model }}</p>
+                    <p><strong>Model ID :</strong> {{ $log->model_id }}</p>
+                    <p><strong>Dibuat pada :</strong> {{ $log->created_at->format('d-m-Y H:i') }}</p>
+                </div>
             </div>
-            <div class="row mb-2">
-                <div class="col-sm-3 font-weight-bold">Action:</div>
-                <div class="col-sm-9">{{ $log->action }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-3 font-weight-bold">Model:</div>
-                <div class="col-sm-9">{{ $log->model }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-3 font-weight-bold">Model ID:</div>
-                <div class="col-sm-9">{{ $log->model_id }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-3 font-weight-bold">Timestamp:</div>
-                <div class="col-sm-9">{{ $log->created_at->format('d M Y H:i') }}</div>
-            </div>
-        </div>
-    </div>
 
-    @if(in_array($log->action, ['Created', 'Updated']))
-    <div class="card mt-3">
-        <div class="card-header">
-            Changes
-        </div>
-        <div class="card-body">
-            @if(isset($changes['new']))
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Field</th>
-                        <th>New Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($changes['new'] as $key => $value)
-                    @if($key !== '_token' && $key !== 'method' && $key !== 'foto')
-                    <tr>
-                        <td>{{ ucfirst(str_replace('_', ' ', $key)) }}</td>
-                        <td>
-                            @if(is_array($value))
-                            <ul>
-                                @foreach($value as $item)
-                                <li>{{ $item }}</li>
-                                @endforeach
-                            </ul>
+            <div class="mb-4">
+                <h6>Perubahan</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Data Lama</h6>
+                        <div class="data-viewer">
+                            @if(!empty($changes['old']))
+                            @foreach($changes['old'] as $key => $value)
+                            @unless(in_array($key, ['created_at', 'updated_at', 'foto', 'deleted_at', 'deleted_by',
+                            'updated_by', 'created_by', 'token', 'method']))
+                            <p><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong>
+                                @if(is_array($value))
+                                {{ implode(', ', $value) }}
+                                @else
+                                {{ $value }}
+                                @endif
+                            </p>
+                            @endunless
+                            @endforeach
                             @else
-                            {{ $value ?? 'N/A' }}
+                            <p>Tidak ada data lama.</p>
                             @endif
-                        </td>
-                    </tr>
-                    @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Data Baru</h6>
+                        <div class="data-viewer">
+                            @if(!empty($changes['new']))
+                            @foreach($changes['new'] as $key => $value)
+                            @unless(in_array($key, ['_method', '_token']))
+                            <p><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong>
+                                @if(is_array($value))
+                                {{ implode(', ', $value) }}
+                                @else
+                                {{ $value }}
+                                @endif
+                            </p>
+                            @endunless
+                            @endforeach
+                            @else
+                            <p>Tidak ada data baru.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @if($log->model === 'SuratJalan' && !empty($details))
+            <div class="mb-4">
+                <h6>Details</h6>
+                <div class="details-list">
+                    @foreach($details as $detail)
+                    <div class="detail-item mb-3 p-3 border rounded">
+                        <p><strong>Nama Barang :</strong> {{ $detail['namaBarang'] ?? '-' }}</p>
+                        <p><strong>Jumlah :</strong> {{ $detail['jumlahBarang'] ?? '-' }}</p>
+                        <p><strong>Kode :</strong> {{ $detail['kodeBarang'] ?? '-' }}</p>
+                        <p><strong>Keterangan :</strong> {{ $detail['keteranganBarang'] ?? '-' }}</p>
+                    </div>
                     @endforeach
-                </tbody>
-            </table>
-            @else
-            <p>No changes available.</p>
+                </div>
+            </div>
+            @elseif($log->model === 'Mutasi' && !empty($details))
+            <div class="mb-4">
+                <h6>Details</h6>
+                <div class="details-list">
+                    @foreach($details as $detail)
+                    <div class="detail-item mb-3 p-3 border rounded">
+                        <p><strong>Nama Barang :</strong> {{ $detail['nama_barang'] ?? '-' }}</p>
+                        <p><strong>Merk :</strong> {{ $detail['merk'] ?? '-' }}</p>
+                        <p><strong>Kategori :</strong> {{ $detail['kategori'] ?? '-' }}</p>
+                        <p><strong>No Inventaris :</strong> {{ $detail['no_inventaris'] ?? '-' }}</p>
+                        <p><strong>Keterangan :</strong> {{ $detail['keterangan'] ?? '-' }}</p>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
             @endif
-        </div>
-    </div>
-    @elseif($log->action === 'Deleted')
-    <div class="card mt-3">
-        <div class="card-header">
-            Deleted Data
-        </div>
-        <div class="card-body">
-            @if(isset($changes['old']))
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Field</th>
-                        <th>Old Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($changes['old'] as $key => $value)
-                    @if($key !== '_token' && $key !== 'method' && $key !== 'foto')
-                    <tr>
-                        <td>{{ ucfirst(str_replace('_', ' ', $key)) }}</td>
-                        <td>
-                            @if(is_array($value))
-                            <ul>
-                                @foreach($value as $item)
-                                <li>{{ $item }}</li>
-                                @endforeach
-                            </ul>
-                            @else
-                            {{ $value ?? 'N/A' }}
-                            @endif
-                        </td>
-                    </tr>
-                    @endif
-                    @endforeach
-                </tbody>
-            </table>
-            <form action="{{ route('admin.logs.restore', $log->id) }}" method="POST" id="restore-form">
+
+            @if($log->action === 'Deleted')
+            <form action="{{ route('admin.logs.restore', $log->id) }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-success">Restore</button>
             </form>
-            @else
-            <p>No data available to restore.</p>
             @endif
         </div>
     </div>
-    @endif
-
-    @if(isset($details) && !empty($details))
-    <h5 class="mt-3">Details:</h5>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Field</th>
-                <th>Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($details as $detail)
-            <tr>
-                <td>Nama Barang</td>
-                <td>{{ $detail['namaBarang'] ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-                <td>Jumlah Barang</td>
-                <td>{{ $detail['jumlahBarang'] ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-                <td>Kode Barang</td>
-                <td>{{ $detail['kodeBarang'] ?? 'N/A' }}</td>
-            </tr>
-            <tr>
-                <td>Keterangan Barang</td>
-                <td>{{ $detail['keteranganBarang'] ?? 'N/A' }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    @else
-    <p>No details available.</p>
-    @endif
 </div>
 
-@section('scripts')
-<script>
-    $(document).ready(function () {
-        // Create and display loading spinner
-        const loader = document.createElement('div');
-        loader.className = 'spinner-border text-primary';
-        loader.style.position = 'fixed';
-        loader.style.top = '50%';
-        loader.style.left = '50%';
-        loader.style.transform = 'translate(-50%, -50%)';
-        loader.style.zIndex = '1000';
-        loader.style.display = 'none'; // Initially hidden
-        document.body.appendChild(loader);
+<style>
+    .card {
+        border-radius: 0.5rem;
+        border: 1px solid #dee2e6;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
 
-        // Show loading spinner while content is loading
-        loader.style.display = 'block';
-        
-        $(window).on('load', function() {
-            loader.style.display = 'none';
-        });
+    .card-header {
+        border-bottom: 1px solid #dee2e6;
+    }
 
-        // Fade-in animation
-        const logDetails = document.getElementById('log-details');
-        logDetails.style.opacity = 0;
-        logDetails.style.transition = 'opacity 1s';
-        logDetails.style.opacity = 1;
+    .card-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
 
-        // SweetAlert for restore confirmation
-        const restoreForm = document.getElementById('restore-form');
-        restoreForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You want to restore this data?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, restore it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    restoreForm.submit();
-                }
-            });
-        });
-    });
-</script>
-@endsection
+    .data-viewer {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .details-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .detail-item {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+    }
+</style>
 @endsection

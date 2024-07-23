@@ -15,20 +15,18 @@ class RedirectIfAuthenticated
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string ...$guards): Response
+    public function handle($request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-            if ( $guard=="admin" && Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::ADMIN_DASHBOARD);
-            }
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                if (Auth::user()->role === 'admin') {
+                    return redirect('/admin/dashboard');
+                } else {
+                    return redirect('/dashboard');
+                }
             }
-        }
-        if (Auth::guard($guard)->check()) {
-            return redirect('/dashboard'); // Sesuaikan dengan halaman utama setelah login
         }
 
         return $next($request);

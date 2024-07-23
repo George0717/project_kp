@@ -4,27 +4,34 @@
 
 @section('container')
 <div class="container mt-5">
-    <div class="card">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="card shadow-lg rounded">
         <div class="card-header bg-success text-white">
-            <h4 class="mb-0 text-white">Tambah Surat Jalan</h4>
+            <h4 class="mb-0">Tambah Surat Jalan</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('suratJalan.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('suratJalan.store') }}" method="post" enctype="multipart/form-data"
+                id="surat-jalan-form">
                 @csrf
                 <div class="form-group mb-4">
                     <label for="nomorSurat" class="form-label">Nomor Surat</label>
                     <input type="text" class="form-control @error('nomorSurat') is-invalid @enderror" id="nomorSurat"
-                        name="nomorSurat" value="{{ old('nomorSurat') }}">
+                        name="nomorSurat" value="{{ old('nomorSurat') }}" placeholder="Masukkan Nomor Surat">
                     @error('nomorSurat')
-                    <span class="invalid-feedback">{{ $message }}</span>
+                    <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group mb-4">
                     <label for="divisi_pengirim" class="form-label">From</label>
-                    <input type="text" class="form-control @error('divisi_pengirim') is-invalid @enderror" id="divisi_pengirim"
-                        name="divisi_pengirim" value="{{ old('divisi_pengirim') }}" placeholder="Contoh : Andre (IT/Lemabang)">
+                    <input type="text" class="form-control @error('divisi_pengirim') is-invalid @enderror"
+                        id="divisi_pengirim" name="divisi_pengirim" value="{{ old('divisi_pengirim') }}"
+                        placeholder="Contoh : Andre (IT/Lemabang)">
                     @error('divisi_pengirim')
-                    <span class="invalid-feedback">{{ $message }}</span>
+                    <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group mb-4">
@@ -32,7 +39,7 @@
                     <input type="date" class="form-control @error('tglKirim') is-invalid @enderror" id="tglKirim"
                         name="tglKirim" value="{{ old('tglKirim') }}">
                     @error('tglKirim')
-                    <span class="invalid-feedback">{{ $message }}</span>
+                    <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group mb-4">
@@ -40,66 +47,54 @@
                     <select class="form-control @error('tujuanTempat') is-invalid @enderror" id="tujuanTempat"
                         name="tujuanTempat">
                         <option value="">Pilih Tujuan Tempat</option>
-                        <option value="Grand JM" {{ old('tujuanTempat')=='Grand JM' ? 'selected' : '' }}>Grand JM
+                        @foreach(['Grand JM', 'JM Lemabang', 'Gudang Bambang Utoyo', 'CM Sako', 'Center Point Malang',
+                        'Center Point Lampung', 'JM Kenten', 'JM Sukarami', 'JM Plaju'] as $tempat)
+                        <option value="{{ $tempat }}" {{ old('tujuanTempat')==$tempat ? 'selected' : '' }}>{{ $tempat }}
                         </option>
-                        <option value="JM Lemabang" {{ old('tujuanTempat')=='JM Lemabang' ? 'selected' : '' }}>JM
-                            Lemabang</option>
-                        <option value="Gudang Bambang Utoyo" {{ old('tujuanTempat')=='Gudang Bambang Utoyo' ? 'selected'
-                            : '' }}>Gudang Bambang Utoyo</option>
-                        <option value="CM Sako" {{ old('tujuanTempat')=='CM Sako' ? 'selected' : '' }}>CM Sako</option>
-                        <option value="Center Point Malang" {{ old('tujuanTempat')=='Center Point Malang' ? 'selected'
-                            : '' }}>Center Point Malang</option>
-                        <option value="Center Point Lampung" {{ old('tujuanTempat')=='Center Point Lampung' ? 'selected'
-                            : '' }}>Center Point Lampung</option>
-                        <option value="JM Kenten" {{ old('tujuanTempat')=='JM Kenten' ? 'selected' : '' }}>JM Kenten
-                        </option>
-                        <option value="JM Sukarami" {{ old('tujuanTempat')=='JM Sukarami' ? 'selected' : '' }}>JM
-                            Sukarami</option>
-                        <option value="JM Plaju" {{ old('tujuanTempat')=='JM Plaju' ? 'selected' : '' }}>JM Plaju
-                        </option>
+                        @endforeach
                     </select>
                     @error('tujuanTempat')
-                    <span class="invalid-feedback">{{ $message }}</span>
+                    <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-group mb-4 m-2">
+                <div class="form-group mb-4">
                     <label for="foto" class="form-label">Upload Foto</label>
                     <input type="file" class="form-control @error('foto') is-invalid @enderror" id="foto" name="foto">
                     @error('foto')
-                    <span class="invalid-feedback">{{ $message }}</span>
+                    <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div id="barang-container">
                     <div class="form-group mb-4">
                         <label for="namaBarang" class="form-label">Nama Barang</label>
                         <input type="text" class="form-control @error('namaBarang.*') is-invalid @enderror"
-                            id="namaBarang" name="namaBarang[]">
+                            id="namaBarang" name="namaBarang[]" placeholder="Masukkan Nama Barang">
                         @error('namaBarang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4">
                         <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
                         <input type="number" class="form-control @error('jumlahBarang.*') is-invalid @enderror"
-                            id="jumlahBarang" name="jumlahBarang[]">
+                            id="jumlahBarang" name="jumlahBarang[]" placeholder="Masukkan Jumlah Barang">
                         @error('jumlahBarang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4">
                         <label for="kode_barang" class="form-label">Kode</label>
                         <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror"
-                            id="kode_barang" name="kode_barang[]">
+                            id="kode_barang" name="kode_barang[]" placeholder="Masukkan Kode Barang">
                         @error('kode_barang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4">
                         <label for="keterangan_barang" class="form-label">Keterangan</label>
                         <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror"
-                            id="keterangan_barang" name="keterangan_barang[]">
+                            id="keterangan_barang" name="keterangan_barang[]" placeholder="Masukkan Keterangan Barang">
                         @error('keterangan_barang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -110,36 +105,127 @@
     </div>
 </div>
 
+<!-- CSS for Modern Styling and Loading Overlay -->
+<style>
+    .card {
+        border-radius: 0.75rem;
+    }
+
+    .card-header {
+        border-radius: 0.75rem 0.75rem 0 0;
+        font-size: 1.25rem;
+    }
+
+    .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 0.5rem;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .invalid-feedback {
+        display: block;
+        color: #dc3545;
+        font-size: 0.875rem;
+    }
+
+    .btn {
+        border-radius: 0.5rem;
+        padding: 0.75rem 1.25rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        border-radius: 0.75rem;
+    }
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+    .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top: 4px solid #28a745;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+<!-- JavaScript for Form Handling -->
 <script>
     document.getElementById('tambah-barang').addEventListener('click', function () {
-    var barangContainer = document.getElementById('barang-container');
-    var barangHTML = `
-        <div class="form-group mb-4">
-            <label for="namaBarang" class="form-label">Nama Barang</label>
-            <input type="text" class="form-control" id="namaBarang" name="namaBarang[]">
-        </div>
-        <div class="form-group mb-4">
-            <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
-            <input type="number" class="form-control" id="jumlahBarang" name="jumlahBarang[]">
-        </div>
-        <div class="form-group mb-4">
-          <label for="kode_barang" class="form-label">Kode</label>
-                <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror"
-                id="kode_barang" name="kode_barang[]">
-                        @error('kode_barang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="keterangan_barang" class="form-label">Keterangan</label>
-                        <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror"
-                            id="keterangan_barang" name="keterangan_barang[]">
-                        @error('keterangan_barang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-    `;
-    barangContainer.insertAdjacentHTML('beforeend', barangHTML);
-});
+        var barangContainer = document.getElementById('barang-container');
+        var barangHTML = `
+            <div class="form-group mb-4 item-container">
+                <label for="namaBarang" class="form-label">Nama Barang</label>
+                <input type="text" class="form-control" name="namaBarang[]" placeholder="Masukkan Nama Barang">
+                <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
+                <input type="number" class="form-control" name="jumlahBarang[]" placeholder="Masukkan Jumlah Barang">
+                <label for="kode_barang" class="form-label">Kode</label>
+                <input type="text" class="form-control" name="kode_barang[]" placeholder="Masukkan Kode Barang">
+                <label for="keterangan_barang" class="form-label">Keterangan</label>
+                <input type="text" class="form-control" name="keterangan_barang[]" placeholder="Masukkan Keterangan Barang">
+                <button type="button" class="btn btn-danger remove-item mt-2">Hapus</button>
+            </div>
+        `;
+        barangContainer.insertAdjacentHTML('beforeend', barangHTML);
+    });
+
+    document.getElementById('barang-container').addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('remove-item')) {
+            e.target.closest('.item-container').remove();
+        }
+    });
+
+    document.getElementById('surat-jalan-form').addEventListener('submit', function () {
+        document.getElementById('loading-overlay').classList.add('active');
+    });
 </script>
 @endsection

@@ -23,13 +23,11 @@ class AdminAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            if (Auth::user()->is_admin) {
-                return redirect()->intended('admin/dashboard');
+            // Cek peran pengguna dan arahkan ke halaman yang sesuai
+            if (Auth::user()->role === 'admin') {
+                return redirect()->intended('/admin/dashboard');
             } else {
-                Auth::logout();
-                return redirect()->route('admin.login')->withErrors([
-                    'email' => 'These credentials do not match our records or you are not an admin.',
-                ]);
+                return redirect()->intended('/dashboard');
             }
         }
 
@@ -37,4 +35,16 @@ class AdminAuthController extends Controller
             'email' => 'These credentials do not match our records.',
         ]);
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+
+    
 }

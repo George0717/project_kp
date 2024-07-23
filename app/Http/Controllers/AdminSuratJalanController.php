@@ -143,15 +143,15 @@ class AdminSuratJalanController extends Controller
         $details = [];
 
         if ($model === 'SuratJalan') {
-            $suratJalan = SuratJalan::find($model_id);
+            $suratJalan = SuratJalan::with('details')->find($model_id);
 
             if ($suratJalan) {
                 $details = $suratJalan->details->map(function ($detail) {
                     return [
                         'namaBarang' => $detail->namaBarang,
                         'jumlahBarang' => $detail->jumlahBarang,
-                        'kodeBarang' => $detail->kodeBarang ?? '-',
-                        'keteranganBarang' => $detail->keteranganBarang ?? '-',
+                        'kodeBarang' => $detail->kode_barang ?? '-',
+                        'keteranganBarang' => $detail->keterangan_barang ?? '-',
                     ];
                 })->toArray();
             }

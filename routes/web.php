@@ -20,6 +20,7 @@ use App\Http\Controllers\LogController;
 Route::get('/', function () {
     return response()->view('auth.login')->header('Cache-Control', 'no-cache, no-store, must-revalidate');
 });
+
 Route::get('/register', function () {
     return view('auth.register');
 });

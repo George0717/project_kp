@@ -5,13 +5,14 @@
 
 @section('container')
 <div class="container mt-5">
-    <div class="card">
+    <div class="card shadow-sm">
         <div class="card-header bg-success text-white">
             <h4 class="mb-0 text-white">Tambah Mutasi</h4>
         </div>
         <div class="card-body">
             <form action="{{ route('admin.mutasi.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
+                <!-- Form fields -->
                 <div class="form-group mb-4">
                     <label for="tgl_buat" class="form-label">Tanggal Buat</label>
                     <input type="date" class="form-control @error('tgl_buat') is-invalid @enderror" id="tgl_buat"
@@ -86,7 +87,7 @@
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="form-group mb-4 m-2">
+                <div class="form-group mb-4">
                     <label for="foto_mutasi" class="form-label">Upload Foto</label>
                     <input type="file" class="form-control @error('foto_mutasi') is-invalid @enderror" id="foto_mutasi"
                         name="foto_mutasi">
@@ -95,49 +96,48 @@
                     @enderror
                 </div>
                 <hr>
-
                 <div id="barang-container">
-                    <div class="form-group mb-4 border">
-                        <label for="nama_barang" class="form-label">Nama Barang</label>
-                        <input type="text" class="form-control @error('nama_barang.*') is-invalid @enderror"
-                            id="nama_barang" name="nama_barang[]">
-                        @error('nama_barang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-4 border">
-                            <label for="merk" class="form-label">Merk</label>
-                            <input type="text" class="form-control @error('merk.*') is-invalid @enderror" id="merk"
-                                name="merk[]">
-                            @error('merk.*')
+                    <div class="barang-item">
+                        <div class="form-group mb-4">
+                            <label for="nama_barang" class="form-label">Nama Barang</label>
+                            <input type="text" class="form-control @error('nama_barang.*') is-invalid @enderror"
+                                id="nama_barang" name="nama_barang[]">
+                            @error('nama_barang.*')
                             <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
-                        <div class="form-group col-md-4 border">
-                            <label for="kategori" class="form-label">Kategori</label>
-                            <select class="form-control @error('kategori.*') is-invalid @enderror" id="kategori"
-                                name="kategori[]">
-                                <option value="">Pilih Kategori</option>
-                                <option value="Baru">Baru</option>
-                                <option value="Mutasi">Mutasi</option>
-                                <option value="Rusak">Rusak</option>
-                            </select>
-                            @error('kategori.*')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                        <div class="row">
+                            <div class="form-group col-md-4 mb-4">
+                                <label for="merk" class="form-label">Merk</label>
+                                <input type="text" class="form-control @error('merk.*') is-invalid @enderror" id="merk"
+                                    name="merk[]">
+                                @error('merk.*')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4 mb-4">
+                                <label for="kategori" class="form-label">Kategori</label>
+                                <select class="form-control @error('kategori.*') is-invalid @enderror" id="kategori"
+                                    name="kategori[]">
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="Baru">Baru</option>
+                                    <option value="Mutasi">Mutasi</option>
+                                    <option value="Rusak">Rusak</option>
+                                </select>
+                                @error('kategori.*')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-4 mb-4">
+                                <label for="no_inventaris" class="form-label">No. Inventaris</label>
+                                <input type="text" class="form-control @error('no_inventaris.*') is-invalid @enderror"
+                                    id="no_inventaris" name="no_inventaris[]">
+                                @error('no_inventaris.*')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 border">
-                            <label for="no_inventaris" class="form-label">No. Inventaris</label>
-                            <input type="text" class="form-control @error('no_inventaris.*') is-invalid @enderror"
-                                id="no_inventaris" name="no_inventaris[]">
-                            @error('no_inventaris.*')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-6 border">
+                        <div class="form-group mb-4">
                             <label for="keterangan" class="form-label">Keterangan</label>
                             <input type="text" class="form-control @error('keterangan.*') is-invalid @enderror"
                                 id="keterangan" name="keterangan[]">
@@ -145,69 +145,83 @@
                             <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
+                        <button type="button" class="btn btn-danger btn-sm remove-barang">Hapus</button>
+                        <hr>
                     </div>
                 </div>
-
-                <button type="button" class="btn btn-secondary mb-4" onclick="addBarang()">Tambah Barang</button>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                <button type="button" class="btn btn-primary" id="add-barang">Tambah Barang</button>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+@push('scripts')
 <script>
-    function addBarang() {
-        var container = document.getElementById('barang-container');
-        var html = `
-            <div class="form-group mb-4 border">
-                <label for="nama_barang" class="form-label">Nama Barang</label>
-                <input type="text" class="form-control @error('nama_barang.*') is-invalid @enderror" name="nama_barang[]">
-                @error('nama_barang.*')
+    document.addEventListener('DOMContentLoaded', function () {
+        let itemIndex = 1;
+
+        document.getElementById('add-barang').addEventListener('click', function () {
+            itemIndex++;
+            let newBarangItem = document.createElement('div');
+            newBarangItem.classList.add('barang-item');
+            newBarangItem.innerHTML = `
+                <div class="form-group mb-4">
+                    <label for="nama_barang_${itemIndex}" class="form-label">Nama Barang</label>
+                    <input type="text" class="form-control @error('nama_barang.*') is-invalid @enderror" id="nama_barang_${itemIndex}" name="nama_barang[]">
+                    @error('nama_barang.*')
                     <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-4 border">
-                    <label for="merk" class="form-label">Merk</label>
-                    <input type="text" class="form-control @error('merk.*') is-invalid @enderror" name="merk[]">
-                    @error('merk.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="form-group col-md-4 border">
-                    <label for="kategori" class="form-label">Kategori</label>
-                    <select class="form-control @error('kategori.*') is-invalid @enderror" name="kategori[]">
-                        <option value="">Pilih Kategori</option>
-                        <option value="Baru">Baru</option>
-                        <option value="Mutasi">Mutasi</option>
-                        <option value="Rusak">Rusak</option>
-                    </select>
-                    @error('kategori.*')
+                <div class="row">
+                    <div class="form-group col-md-4 mb-4">
+                        <label for="merk_${itemIndex}" class="form-label">Merk</label>
+                        <input type="text" class="form-control @error('merk.*') is-invalid @enderror" id="merk_${itemIndex}" name="merk[]">
+                        @error('merk.*')
                         <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6 border">
-                    <label for="no_inventaris" class="form-label">No. Inventaris</label>
-                    <input type="text" class="form-control @error('no_inventaris.*') is-invalid @enderror" name="no_inventaris[]">
-                    @error('no_inventaris.*')
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-4 mb-4">
+                        <label for="kategori_${itemIndex}" class="form-label">Kategori</label>
+                        <select class="form-control @error('kategori.*') is-invalid @enderror" id="kategori_${itemIndex}" name="kategori[]">
+                            <option value="">Pilih Kategori</option>
+                            <option value="Baru">Baru</option>
+                            <option value="Mutasi">Mutasi</option>
+                            <option value="Rusak">Rusak</option>
+                        </select>
+                        @error('kategori.*')
                         <span class="invalid-feedback">{{ $message }}</span>
-                    @enderror
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-4 mb-4">
+                        <label for="no_inventaris_${itemIndex}" class="form-label">No. Inventaris</label>
+                        <input type="text" class="form-control @error('no_inventaris.*') is-invalid @enderror" id="no_inventaris_${itemIndex}" name="no_inventaris[]">
+                        @error('no_inventaris.*')
+                        <span class="invalid-feedback">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
-                <div class="form-group col-md-6 border">
-                    <label for="keterangan" class="form-label">Keterangan</label>
-                    <input type="text" class="form-control @error('keterangan.*') is-invalid @enderror" name="keterangan[]">
+                <div class="form-group mb-4">
+                    <label for="keterangan_${itemIndex}" class="form-label">Keterangan</label>
+                    <input type="text" class="form-control @error('keterangan.*') is-invalid @enderror" id="keterangan_${itemIndex}" name="keterangan[]">
                     @error('keterangan.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
+                    <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', html);
-    }
+                <button type="button" class="btn btn-danger btn-sm remove-barang">Hapus</button>
+                <hr>
+            `;
+            document.getElementById('barang-container').appendChild(newBarangItem);
+        });
+
+        document.getElementById('barang-container').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-barang')) {
+                e.target.parentElement.remove();
+            }
+        });
+    });
 </script>
+@endpush
 @endsection

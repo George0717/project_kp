@@ -29,6 +29,7 @@ class AdminMutasiController extends Controller
         return view('admin.mutasi.index', compact('mutasis'));
     }
 
+
     public function create()
     {
         return view('admin.mutasi.create');
@@ -52,32 +53,29 @@ class AdminMutasiController extends Controller
         ]);
 
         $mutasi = Mutasi::create($request->only(['penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan', 'foto_mutasi', 'tgl_buat']));
-
         if ($request->hasFile('foto_mutasi')) {
-            // Simpan foto ke dalam direktori public/images
             $fotoPath = $request->file('foto_mutasi')->store('public/images');
-
-            // Ambil nama file dari $fotoPath dan simpan ke dalam field 'foto'
             $mutasi->foto_mutasi = basename($fotoPath);
             $mutasi->save();
         }
 
-        foreach ($request->nama_barang as $index => $nama_barang) {
-            MutasiDetail::create([
-                'mutasi_id' => $mutasi->id,
-                'nama_barang' => $nama_barang,
-                'merk' => $request->merk[$index],
-                'kategori' => $request->kategori[$index],
-                'no_inventaris' => $request->no_inventaris[$index],
-                'keterangan' => $request->keterangan[$index] ?? null,
-            ]);
+        if ($request->has('nama_barang')) {
+            foreach ($request->nama_barang as $index => $nama_barang) {
+                MutasiDetail::create([
+                    'mutasi_id' => $mutasi->id,
+                    'nama_barang' => $nama_barang,
+                    'merk' => $request->merk[$index] ?? '',
+                    'kategori' => $request->kategori[$index] ?? '',
+                    'no_inventaris' => $request->no_inventaris[$index] ?? '',
+                    'keterangan' => $request->keterangan[$index] ?? '',
+                ]);
+            }
         }
 
-        // Catat tindakan pengguna ke dalam history
         $this->logHistory('Created', 'Mutasi', $mutasi->id, null, $request->all());
-
         return redirect()->route('admin.mutasi.index')->with('success', "Data berhasil disimpan");
     }
+
 
     public function show(Mutasi $mutasi)
     {
@@ -106,48 +104,40 @@ class AdminMutasiController extends Controller
             'foto_mutasi' => 'nullable|file|image',
         ]);
 
-        $oldData = $mutasi->toArray();
-
-        $mutasi->update($request->only(['penanggung_jawab', 'dibuat_oleh', 'lokasi', 'divisi_tujuan', 'foto_mutasi', 'tgl_buat']));
-
+        $mutasi->update($request->only(['penanggung_jawab', 'dibuat_oleh', 'tgl_buat', 'lokasi', 'divisi_tujuan']));
         if ($request->hasFile('foto_mutasi')) {
             $fotoPath = $request->file('foto_mutasi')->store('public/images');
             $mutasi->foto_mutasi = basename($fotoPath);
             $mutasi->save();
         }
-
+        $oldData = $mutasi->toArray();
         $mutasi->details()->delete();
 
-        foreach ($request->nama_barang as $index => $nama_barang) {
-            MutasiDetail::create([
-                'mutasi_id' => $mutasi->id,
-                'nama_barang' => $nama_barang,
-                'merk' => $request->merk[$index],
-                'kategori' => $request->kategori[$index],
-                'no_inventaris' => $request->no_inventaris[$index],
-                'keterangan' => $request->keterangan[$index] ?? null,
-            ]);
+        if ($request->has('nama_barang')) {
+            foreach ($request->nama_barang as $index => $nama_barang) {
+                MutasiDetail::create([
+                    'mutasi_id' => $mutasi->id,
+                    'nama_barang' => $nama_barang,
+                    'merk' => $request->merk[$index] ?? '',
+                    'kategori' => $request->kategori[$index] ?? '',
+                    'no_inventaris' => $request->no_inventaris[$index] ?? '',
+                    'keterangan' => $request->keterangan[$index] ?? '',
+                ]);
+            }
         }
 
-        // Catat tindakan pengguna ke dalam history
         $this->logHistory('Updated', 'Mutasi', $mutasi->id, $oldData, $request->all());
-
         return redirect()->route('admin.mutasi.index')->with('success', "Data berhasil diperbarui");
     }
 
     public function destroy(Mutasi $mutasi)
     {
-        $oldData = $mutasi->toArray();
-
         $mutasi->delete();
-
-        // Catat tindakan pengguna ke dalam history
+        $oldData = $mutasi->toArray();
         $this->logHistory('Deleted', 'Mutasi', $mutasi->id, $oldData);
-
         return redirect()->route('admin.mutasi.index')->with('success', "Data berhasil dihapus");
     }
 
-    // Fungsi untuk mencatat tindakan pengguna ke dalam history
     protected function logHistory($action, $model, $model_id, $oldData = null, $newData = null)
     {
         if ($model === 'Mutasi') {
@@ -209,4 +199,6 @@ class AdminMutasiController extends Controller
             'details' => $data['details'] ?? [],
         ];
     }
+
+    
 }

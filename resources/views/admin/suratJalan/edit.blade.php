@@ -4,12 +4,13 @@
 
 @section('container')
 <div class="container mt-5">
-    <div class="card">
+    <div class="card shadow-sm rounded">
         <div class="card-header bg-success text-white">
             <h4 class="mb-0 text-white">Edit Surat Jalan</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.suratJalan.update', $suratJalan) }}" method="post" enctype="multipart/form-data">
+            <form id="surat-jalan-form" action="{{ route('admin.suratJalan.update', $suratJalan) }}" method="post"
+                enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="form-group mb-4">
@@ -22,8 +23,9 @@
                 </div>
                 <div class="form-group mb-4">
                     <label for="divisi_pengirim" class="form-label">From</label>
-                    <input type="text" class="form-control @error('divisi_pengirim') is-invalid @enderror" id="divisi_pengirim"
-                        name="divisi_pengirim" value="{{ $suratJalan->divisi_pengirim }}" placeholder="Contoh : Andre (IT/Lemabang)">
+                    <input type="text" class="form-control @error('divisi_pengirim') is-invalid @enderror"
+                        id="divisi_pengirim" name="divisi_pengirim" value="{{ $suratJalan->divisi_pengirim }}"
+                        placeholder="Contoh : Andre (IT/Lemabang)">
                     @error('divisi_pengirim')
                     <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
@@ -72,38 +74,41 @@
                     @enderror
                 </div>
                 <div id="barang-container">
-                    @foreach ($suratJalan->details as $detail)
-                    <div class="form-group mb-4">
-                        <label for="namaBarang" class="form-label">Nama Barang</label>
-                        <input type="text" class="form-control @error('namaBarang.*') is-invalid @enderror"
-                            name="namaBarang[]" value="{{ $detail->namaBarang }}">
-                        @error('namaBarang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
-                        <input type="number" class="form-control @error('jumlahBarang.*') is-invalid @enderror"
-                            name="jumlahBarang[]" value="{{ $detail->jumlahBarang }}">
-                        @error('jumlahBarang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="kode_barang" class="form-label">Kode Barang</label>
-                        <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror"
-                            name="kode_barang[]" value="{{ $detail->kode_barang }}">
-                        @error('kode_barang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="keterangan_barang" class="form-label">Keterangan</label>
-                        <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror"
-                            name="keterangan_barang[]" value="{{ $detail->keterangan_barang }}">
-                        @error('keterangan_barang.*')
-                        <span class="invalid-feedback">{{ $message }}</span>
-                        @enderror
+                    @foreach ($suratJalan->details as $index => $detail)
+                    <div class="card p-3 mb-3 item-container">
+                        <div class="form-group mb-4">
+                            <label for="namaBarang" class="form-label">Nama Barang</label>
+                            <input type="text" class="form-control @error('namaBarang.*') is-invalid @enderror"
+                                name="namaBarang[]" value="{{ $detail->namaBarang }}">
+                            @error('namaBarang.*')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
+                            <input type="number" class="form-control @error('jumlahBarang.*') is-invalid @enderror"
+                                name="jumlahBarang[]" value="{{ $detail->jumlahBarang }}">
+                            @error('jumlahBarang.*')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="kode_barang" class="form-label">Kode Barang</label>
+                            <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror"
+                                name="kode_barang[]" value="{{ $detail->kode_barang }}">
+                            @error('kode_barang.*')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="keterangan_barang" class="form-label">Keterangan</label>
+                            <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror"
+                                name="keterangan_barang[]" value="{{ $detail->keterangan_barang }}">
+                            @error('keterangan_barang.*')
+                            <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <button type="button" class="btn btn-danger remove-item">Hapus</button>
                     </div>
                     @endforeach
                 </div>
@@ -118,36 +123,37 @@
     function addBarang() {
         var container = document.getElementById('barang-container');
         var html = `
-            <div class="form-group mb-4">
-                <label for="namaBarang" class="form-label">Nama Barang</label>
-                <input type="text" class="form-control @error('namaBarang.*') is-invalid @enderror" name="namaBarang[]">
-                @error('namaBarang.*')
-                <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
+            <div class="card p-3 mb-3 item-container">
+                <div class="form-group mb-4">
+                    <label for="namaBarang" class="form-label">Nama Barang</label>
+                    <input type="text" class="form-control" name="namaBarang[]">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
+                    <input type="number" class="form-control" name="jumlahBarang[]">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="kode_barang" class="form-label">Kode Barang</label>
+                    <input type="text" class="form-control" name="kode_barang[]">
+                </div>
+                <div class="form-group mb-4">
+                    <label for="keterangan_barang" class="form-label">Keterangan</label>
+                    <input type="text" class="form-control" name="keterangan_barang[]">
+                </div>
+                <button type="button" class="btn btn-danger remove-item">Hapus</button>
             </div>
-            <div class="form-group mb-4">
-                <label for="jumlahBarang" class="form-label">Jumlah Barang</label>
-                <input type="number" class="form-control @error('jumlahBarang.*') is-invalid @enderror" name="jumlahBarang[]">
-                @error('jumlahBarang.*')
-                <span class="invalid-feedback">{{ $message }}</span>
-                @enderror
-            </div>
-            <div class="form-group mb-4">
-                            <label for="kode_barang" class="form-label">Kode Barang</label>
-                            <input type="text" class="form-control @error('kode_barang.*') is-invalid @enderror" name="kode_barang[]" value="{{ $detail->kode_barang }}">
-                            @error('kode_barang.*')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group mb-4">
-                            <label for="keterangan_barang" class="form-label">Keterangan</label>
-                            <input type="text" class="form-control @error('keterangan_barang.*') is-invalid @enderror" name="keterangan_barang[]" value="{{ $detail->keterangan_barang }}">
-                            @error('keterangan_barang.*')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
         `;
         container.insertAdjacentHTML('beforeend', html);
     }
+
+    document.getElementById('barang-container').addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('remove-item')) {
+            e.target.closest('.item-container').remove();
+        }
+    });
+
+    document.getElementById('surat-jalan-form').addEventListener('submit', function () {
+        document.getElementById('loading-overlay').classList.add('active');
+    });
 </script>
 @endsection

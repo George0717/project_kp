@@ -18,6 +18,6 @@ class MutasiDetail extends Model
 
     public function mutasi()
     {
-        return $this->belongsTo(Mutasi::class);
+        return $this->belongsTo(Mutasi::class, 'mutasi_id');
     }
 }

@@ -34,6 +34,7 @@ class LogController extends Controller
         $changes = [];
         $details = [];
 
+        // Ambil model berdasarkan log
         if ($log->model === 'SuratJalan') {
             $model = SuratJalan::withTrashed()->find($log->model_id);
         } elseif ($log->model === 'Mutasi') {
@@ -41,9 +42,17 @@ class LogController extends Controller
         }
 
         try {
+            // Decode changes JSON
             $changes = json_decode($log->changes, true);
-            $details = $changes['details'] ?? [];
+
+            // Pastikan 'details' ada dalam perubahan
+            if (isset($changes['details'])) {
+                $details = $changes['details'];
+            } elseif (isset($changes['new'])) {
+                $details = $changes['new']; // Sesuaikan jika 'details' disimpan dalam 'new'
+            }
         } catch (\Exception $e) {
+            // Tangani kesalahan jika decoding gagal
             $changes = [];
         }
 
@@ -52,18 +61,17 @@ class LogController extends Controller
 
 
 
-
     public function restore($id)
     {
         $log = Log::findOrFail($id);
-    
+
         if ($log->action === 'Deleted') {
             $modelClass = "App\\Models\\" . $log->model;
             $model = $modelClass::withTrashed()->find($log->model_id);
-    
+
             if ($model && $model->trashed()) {
                 $model->restore();
-    
+
                 // Log the restore action
                 Log::create([
                     'user_id' => Auth::id(),
@@ -72,15 +80,14 @@ class LogController extends Controller
                     'model_id' => $log->model_id,
                     'changes' => null,
                 ]);
-    
+
                 return redirect()->route('admin.logs.index')->with('success', 'Data has been restored.');
             }
-    
+
             // Handle case where model instance is not found or already restored
             return redirect()->route('admin.logs.index')->with('error', 'Data has already been restored or could not be found.');
         }
-    
+
         return redirect()->route('admin.logs.index')->with('error', 'Unable to restore data.');
     }
-    
 }
