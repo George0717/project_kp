@@ -56,14 +56,14 @@ class LogController extends Controller
     public function restore($id)
     {
         $log = Log::findOrFail($id);
-
+    
         if ($log->action === 'Deleted') {
             $modelClass = "App\\Models\\" . $log->model;
             $model = $modelClass::withTrashed()->find($log->model_id);
-
-            if ($model) {
+    
+            if ($model && $model->trashed()) {
                 $model->restore();
-
+    
                 // Log the restore action
                 Log::create([
                     'user_id' => Auth::id(),
@@ -72,14 +72,15 @@ class LogController extends Controller
                     'model_id' => $log->model_id,
                     'changes' => null,
                 ]);
-
+    
                 return redirect()->route('admin.logs.index')->with('success', 'Data has been restored.');
             }
-
-            // Handle case where model instance is not found
-            return redirect()->route('admin.logs.index')->with('error', 'Data could not be found.');
+    
+            // Handle case where model instance is not found or already restored
+            return redirect()->route('admin.logs.index')->with('error', 'Data has already been restored or could not be found.');
         }
-
+    
         return redirect()->route('admin.logs.index')->with('error', 'Unable to restore data.');
     }
+    
 }

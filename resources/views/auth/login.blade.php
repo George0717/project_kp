@@ -1,31 +1,43 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-    <form method="POST" action="{{ route('login') }}" >
-        @csrf
-        <!-- Email Address -->
-        <div >
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+    <div class="login-wrapper">
+        <div class="login-container">
+            <!-- Loading Indicator -->
+            <div id="loading-overlay" class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            <!-- Login Form -->
+            <div class="login-form">
+                <h2>Login</h2>
+                <form method="POST" action="{{ route('login') }}" id="login-form">
+                    @csrf
+                    <!-- Email Address -->
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                        <x-input-error :messages="$errors->get('email')" class="error-message" />
+                    </div>
 
-        <!-- Remember Me -->
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input id="password" type="password" name="password" required autocomplete="current-password" />
+                        <x-input-error :messages="$errors->get('password')" class="error-message" />
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-primary">
+                        Log in
+                    </button>
+                </form>
+            </div>
         </div>
-    </form>
-    
+    </div>
+
+    <!-- Include JS for Form Submission -->
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            document.getElementById('loading-overlay').classList.add('active');
+        });
+    </script>
 </x-guest-layout>

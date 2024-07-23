@@ -111,7 +111,7 @@
                     @endforeach
                 </tbody>
             </table>
-            <form action="{{ route('admin.logs.restore', $log->id) }}" method="POST">
+            <form action="{{ route('admin.logs.restore', $log->id) }}" method="POST" id="restore-form">
                 @csrf
                 <button type="submit" class="btn btn-success">Restore</button>
             </form>
@@ -159,7 +159,7 @@
 
 @section('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    $(document).ready(function () {
         // Create and display loading spinner
         const loader = document.createElement('div');
         loader.className = 'spinner-border text-primary';
@@ -174,7 +174,7 @@
         // Show loading spinner while content is loading
         loader.style.display = 'block';
         
-        window.addEventListener('load', () => {
+        $(window).on('load', function() {
             loader.style.display = 'none';
         });
 
@@ -183,6 +183,25 @@
         logDetails.style.opacity = 0;
         logDetails.style.transition = 'opacity 1s';
         logDetails.style.opacity = 1;
+
+        // SweetAlert for restore confirmation
+        const restoreForm = document.getElementById('restore-form');
+        restoreForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to restore this data?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, restore it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    restoreForm.submit();
+                }
+            });
+        });
     });
 </script>
 @endsection
